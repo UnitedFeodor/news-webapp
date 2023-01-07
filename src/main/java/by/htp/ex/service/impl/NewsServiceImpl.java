@@ -23,8 +23,13 @@ public class NewsServiceImpl implements INewsService{
 	}
 
 	@Override
-	public void save() {
-		// TODO Auto-generated method stub
+	public void add(News news) {
+		try {
+			newsDAO.addNews(news);
+		} catch (NewsDAOException e) {
+			throw new RuntimeException(e);
+			//TODO Exception
+		}
 
 	}
 

@@ -9,7 +9,7 @@
 		<div align="right">
 
 			<a href=""> en </a> &nbsp;&nbsp; 
-			<a	href=""> ru </a> <br /> <br />
+			<a href=""> ru </a> <br /> <br />
 		</div>
 
 		<c:if test="${not (sessionScope.user eq 'active')}">

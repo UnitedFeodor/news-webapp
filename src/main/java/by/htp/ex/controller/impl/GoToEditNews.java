@@ -18,7 +18,6 @@ public class GoToEditNews implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         News news;
-
         String id;
 
         id = request.getParameter("id");

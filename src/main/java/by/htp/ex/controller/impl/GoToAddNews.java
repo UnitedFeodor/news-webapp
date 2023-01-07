@@ -11,22 +11,23 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public class DoEditNews implements Command {
-
-    private final String NEWS_TITLE = "news_title";
-    private final String NEWS_DATE = "news_date";
-    private final String NEWS_BRIEF = "news_brief";
-    private final String NEWS_CONTENT = "news_content";
-
-
-
+public class GoToAddNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("idNews"));
+        int id;
+        try {
+            id = newsService.list().size() + 1;
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+            //TODO exception
+        }
+        News news = new News(id, "", "", "", "");
+        request.setAttribute("news", news);
+        request.setAttribute("presentation", "addNews");
+        request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 
-        News newNews = new News(id,request.getParameter(NEWS_TITLE),request.getParameter(NEWS_BRIEF),request.getParameter(NEWS_CONTENT),request.getParameter(NEWS_DATE));
-        newsService.update(newNews);
-        response.sendRedirect("controller?command=go_to_news_list");
+
     }
 }
