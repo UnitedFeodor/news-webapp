@@ -16,7 +16,7 @@ public class NewsServiceImpl implements INewsService{
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -26,8 +26,13 @@ public class NewsServiceImpl implements INewsService{
 	}
 
 	@Override
-	public void update() {
-		// TODO Auto-generated method stub
+	public void update(News news) {
+		try {
+			newsDAO.updateNews(news);
+		} catch (NewsDAOException e) {
+			throw new RuntimeException(e);
+			//TODO Exception
+		}
 		
 	}
 
@@ -35,7 +40,7 @@ public class NewsServiceImpl implements INewsService{
 	public List<News> latestList(int count) throws ServiceException {
 		
 		try {
-			return newsDAO.getLatestsList(5);
+			return newsDAO.getLatestsList(count);
 		} catch (NewsDAOException e) {
 			throw new ServiceException(e);
 		}

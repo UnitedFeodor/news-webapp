@@ -15,6 +15,7 @@ public final class DaoProvider {
 	
 	
 	public IUserDAO getUserDao() {
+
 		return userDao;
 	}
 	
@@ -23,6 +24,7 @@ public final class DaoProvider {
 	}
 
 	public static DaoProvider getInstance() {
+
 		return instance;
 	}
 }
