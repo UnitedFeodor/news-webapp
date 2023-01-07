@@ -12,10 +12,10 @@ public class NewsDAO implements INewsDAO {
 
 	List<News> newsStorage = new ArrayList<News>();
 	{
-		newsStorage.add(new News(1, "title1", "brief1brief1brief1brief1brief1brief1brief1", "contect1", "11/11/22"));
-		newsStorage.add(new News(2, "title2", "brief2brief2brief2brief2brief2brief2brief2", "contect2", "11/11/22"));
+		newsStorage.add(new News(1, "title1", "brief1brief1brief1brief1brief1brief1brief1", "contect1", "07/11/22"));
+		newsStorage.add(new News(2, "title2", "brief2brief2brief2brief2brief2brief2brief2", "contect2", "06/11/22"));
 		newsStorage.add(new News(3, "title3", "brief3brief3brief3brief3brief3brief3brief3", "contect3", "11/11/22"));
-		newsStorage.add(new News(4, "title4", "brief4brief4brief4brief4brief4brief4brief4", "contect4", "11/11/22"));
+		newsStorage.add(new News(4, "title4", "brief4brief4brief4brief4brief4brief4brief4", "contect4", "08/11/22"));
 		newsStorage.add(new News(5, "title5", "brief5brief5brief5brief5brief5brief5brief5", "contect5", "11/11/22"));
 
 	}

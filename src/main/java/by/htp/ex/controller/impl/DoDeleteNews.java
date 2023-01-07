@@ -14,7 +14,13 @@ public class DoDeleteNews implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] newsIds = request.getParameterValues("idNews");
-        newsService.delete(newsIds);
-        response.sendRedirect("controller?command=go_to_news_list");
-    }
+        if (newsIds != null) {
+            newsService.delete(newsIds);
+            response.sendRedirect("controller?command=go_to_news_list");
+        } else {
+            request.setAttribute("error_msg","no news to delete selected");
+            request.getRequestDispatcher("/WEB-INF/pages/tiles/error.jsp").forward(request, response);
+            //response.sendRedirect("/WEB-INF/pages/tiles/error.jsp");
+        }
+        }
 }
