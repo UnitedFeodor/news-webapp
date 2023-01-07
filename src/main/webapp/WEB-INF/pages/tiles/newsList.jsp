@@ -5,7 +5,7 @@
 	<a href="">News >> </a> News List
 </div>
 
-<form action="" method="post">
+<form action="controller" method="post">
 	<c:forEach var="news" items="${requestScope.news}">
 		<div class="single-news-wrapper">
 			<div class="single-news-header-wrapper">
@@ -38,13 +38,23 @@
 
 	</c:forEach>
 
-	<!-- 	<logic:notEmpty name="newsForm" property="newsList">
+    <c:if test="${sessionScope.role eq 'admin'}">
+        <div class="delete-button-position">
+
+            <input type="hidden" name="command" value="do_delete_news" />
+            <input type="submit" value="Delete" />
+
+        </div>
+    </c:if>
+
+	 <!-- <logic:notEmpty name="newsForm" property="newsList">
 		<div class="delete-button-position">
 			<html:submit>
 				<bean:message key="locale.newslink.deletebutton" />
 			</html:submit>
 		</div>
-	</logic:notEmpty> -->
+	</logic:notEmpty>
+    -->
 
 	<div class="no-news">
 		<c:if test="${requestScope.news eq null}">

@@ -45,15 +45,15 @@
         <div class="first-view-button">
             <!-- form -->
                 <input type="hidden" name="command" value="do_edit_news" /> <input
-                    type="hidden" name="id" value="${news.idNews}" /> <input
+                    type="hidden" name="idNews" value="${news.idNews}" /> <input
                     type="submit" value="Save" />
 
         </div>
     </form>
     <div class="second-view-button">
-        <form>
+        <form action="controller">
             <input type="hidden" name="command" value="go_to_news_list" /> <input
-                type="hidden" name="id" value="${news.idNews}" /> <input
+                type="hidden" name="idNews" value="${news.idNews}" /> <input
                 type="submit" value="Cancel" />
         </form>
 

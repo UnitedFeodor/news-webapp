@@ -6,7 +6,7 @@ import by.htp.ex.bean.News;
 
 public interface INewsService {
 
-
+  void delete(String[] newsIds);
   void save();
 
   void find();

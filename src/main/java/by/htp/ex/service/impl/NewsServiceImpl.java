@@ -12,7 +12,16 @@ import by.htp.ex.service.ServiceException;
 public class NewsServiceImpl implements INewsService{
 
 	private final INewsDAO newsDAO = DaoProvider.getInstance().getNewsDAO();
-	
+
+	@Override
+	public void delete(String[] newsIds) {
+		try {
+			newsDAO.deleteNews(newsIds);
+		} catch (NewsDAOException e) {
+			// TODO exception
+		}
+	}
+
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
