@@ -13,15 +13,16 @@ import java.io.IOException;
 import static by.htp.ex.bean.attributes.NewsAttributes.NEWS_ID;
 import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
 import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.controller.impl.utilities.ControllerUtilities.isRoleAdmin;
 
 public class DoDeleteNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        String role = (String) session.getAttribute(USER_ROLE);
+        //String role = (String) session.getAttribute(USER_ROLE);
 
-        if (role.equals("admin")) {
+        if (isRoleAdmin(session)) {
             String[] newsIds = request.getParameterValues(NEWS_ID);
             if (newsIds != null) {
                 newsService.delete(newsIds);

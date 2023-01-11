@@ -15,6 +15,7 @@ import java.io.IOException;
 import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
 import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
 import static by.htp.ex.bean.attributes.ViewAttributes.PRESENTATION;
+import static by.htp.ex.controller.impl.utilities.ControllerUtilities.isRoleAdmin;
 
 public class GoToAddNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
@@ -22,9 +23,9 @@ public class GoToAddNews implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        String role = (String) session.getAttribute(USER_ROLE);
+        //String role = (String) session.getAttribute(USER_ROLE);
 
-        if (role != null && role.equals("admin")) {
+        if (isRoleAdmin(session)) {
 
             int id;
             try {

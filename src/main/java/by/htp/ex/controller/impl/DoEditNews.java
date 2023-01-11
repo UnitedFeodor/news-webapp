@@ -14,6 +14,7 @@ import java.io.IOException;
 import static by.htp.ex.bean.attributes.NewsAttributes.*;
 import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
 import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.controller.impl.utilities.ControllerUtilities.isRoleAdmin;
 
 
 public class DoEditNews implements Command {
@@ -22,9 +23,9 @@ public class DoEditNews implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        String role = (String) session.getAttribute(USER_ROLE);
+        //String role = (String) session.getAttribute(USER_ROLE);
 
-        if (role != null && role.equals("admin")) {
+        if (isRoleAdmin(session)) {
             int id = Integer.parseInt(request.getParameter(NEWS_ID));
 
             News newNews = new News(id,request.getParameter(NEWS_TITLE),request.getParameter(NEWS_BRIEF),request.getParameter(NEWS_CONTENT),request.getParameter(NEWS_DATE));
