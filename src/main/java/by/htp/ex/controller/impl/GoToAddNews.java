@@ -8,28 +8,41 @@ import by.htp.ex.service.ServiceProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.bean.ViewAttributes.PRESENTATION;
+import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
+import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.bean.attributes.ViewAttributes.PRESENTATION;
 
 public class GoToAddNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id;
-        try {
-            id = newsService.list().size() + 1;
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-            //TODO exception
-        }
-        News news = new News(id, "", "", "", "");
-        request.setAttribute("news", news);
-        request.setAttribute(PRESENTATION, "addNews");
-        request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
+        HttpSession session = request.getSession(false);
+        String role = (String) session.getAttribute(USER_ROLE);
 
+        if (role != null && role.equals("admin")) {
+
+            int id;
+            try {
+                id = newsService.list().size() + 1;
+                News news = new News(id, "", "", "", "");
+                request.setAttribute("news", news);
+                request.setAttribute(PRESENTATION, "addNews");
+                request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
+            } catch (ServiceException e) {
+
+                session.setAttribute(ERROR_MESSAGE,"cannot get the list of news");
+                response.sendRedirect("controller?command=go_to_error_page");
+            }
+
+        } else {
+            session.setAttribute(ERROR_MESSAGE,"user with such role cannot add news");
+            response.sendRedirect("controller?command=go_to_error_page");
+        }
 
     }
 }

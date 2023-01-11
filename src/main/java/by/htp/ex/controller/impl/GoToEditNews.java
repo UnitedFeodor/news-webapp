@@ -8,10 +8,12 @@ import by.htp.ex.service.ServiceProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.bean.NewsAttributes.NEWS_ID;
+import static by.htp.ex.bean.attributes.NewsAttributes.NEWS_ID;
+import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
 
 public class GoToEditNews implements Command {
 
@@ -31,8 +33,9 @@ public class GoToEditNews implements Command {
 
             request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
         } catch (ServiceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            HttpSession session = request.getSession(false);
+            session.setAttribute(ERROR_MESSAGE,"cannot find the news by id");
+            response.sendRedirect("controller?command=go_to_error_page");
         }
 
     }

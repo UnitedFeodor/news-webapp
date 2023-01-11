@@ -10,7 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import static by.htp.ex.bean.UserAttributes.USER_ROLE;
+import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
 
 public class DoSignIn implements Command {
 

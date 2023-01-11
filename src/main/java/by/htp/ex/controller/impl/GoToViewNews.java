@@ -1,7 +1,6 @@
 package by.htp.ex.controller.impl;
 
 import java.io.IOException;
-import java.util.List;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.controller.Command;
@@ -11,8 +10,11 @@ import by.htp.ex.service.ServiceProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import static by.htp.ex.bean.NewsAttributes.*;
-import static by.htp.ex.bean.ViewAttributes.PRESENTATION;
+import jakarta.servlet.http.HttpSession;
+
+import static by.htp.ex.bean.attributes.NewsAttributes.*;
+import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.bean.attributes.ViewAttributes.PRESENTATION;
 
 public class GoToViewNews implements Command {
 	
@@ -33,8 +35,10 @@ public class GoToViewNews implements Command {
 
 			request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			HttpSession session = request.getSession(false);
+			session.setAttribute(ERROR_MESSAGE,"cannot find the news by id");
+			response.sendRedirect("controller?command=go_to_error_page");
 		}
 		
 	}

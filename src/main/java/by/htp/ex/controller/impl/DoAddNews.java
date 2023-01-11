@@ -10,9 +10,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import static by.htp.ex.bean.NewsAttributes.*;
-import static by.htp.ex.bean.UserAttributes.USER_ROLE;
-import static by.htp.ex.bean.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.bean.attributes.NewsAttributes.*;
+import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
+import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
 
 public class DoAddNews implements Command {
 
@@ -30,8 +30,8 @@ public class DoAddNews implements Command {
             newsService.add(newNews);
             response.sendRedirect("controller?command=go_to_news_list");
         } else {
-            request.setAttribute(ERROR_MESSAGE,"user with such role cannot add news");
-            request.getRequestDispatcher("controller?command=go_to_error_page");
+            session.setAttribute(ERROR_MESSAGE,"user with such role cannot add news");
+            response.sendRedirect("controller?command=go_to_error_page");
         }
     }
 }

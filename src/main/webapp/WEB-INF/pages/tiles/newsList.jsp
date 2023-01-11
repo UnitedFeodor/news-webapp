@@ -47,6 +47,7 @@
         </div>
     </c:if>
 
+	<%--
 	 <!-- <logic:notEmpty name="newsForm" property="newsList">
 		<div class="delete-button-position">
 			<html:submit>
@@ -54,7 +55,7 @@
 			</html:submit>
 		</div>
 	</logic:notEmpty>
-    -->
+    -->--%>
 
 	<div class="no-news">
 		<c:if test="${requestScope.news eq null}">

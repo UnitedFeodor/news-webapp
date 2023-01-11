@@ -4,7 +4,8 @@
 
 <div class="body-title">
     <h2>
-        <c:out value="${requestScope.error_msg }" />
+        <c:out value="${sessionScope.error_msg }" />
+        <c:remove var="error_msg"/>
     </h2>
 	<a href="controller?command=go_to_news_list">Back to News </a>
 </div>

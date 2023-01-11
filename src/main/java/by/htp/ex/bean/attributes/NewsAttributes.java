@@ -1,4 +1,4 @@
-package by.htp.ex.bean;
+package by.htp.ex.bean.attributes;
 
 public class NewsAttributes {
     public static final String NEWS_TITLE = "news_title";

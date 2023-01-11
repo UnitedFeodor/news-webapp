@@ -1,10 +1,9 @@
 package by.htp.ex.bean;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class News implements Serializable {
-
-
 
 	private static final long serialVersionUID = 1L;
 	
@@ -64,6 +63,18 @@ public class News implements Serializable {
 
 	public void setNewsDate(String newsDate) {
 		this.newsDate = newsDate;
-	}	
-	
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		News news = (News) o;
+		return Objects.equals(idNews, news.idNews) && Objects.equals(title, news.title) && Objects.equals(briefNews, news.briefNews) && Objects.equals(content, news.content) && Objects.equals(newsDate, news.newsDate);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(idNews, title, briefNews, content, newsDate);
+	}
 }
