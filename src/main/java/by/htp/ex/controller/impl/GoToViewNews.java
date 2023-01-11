@@ -11,7 +11,7 @@ import by.htp.ex.service.ServiceProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import static by.htp.ex.bean.NewsAttributes.*;
 public class GoToViewNews implements Command {
 	
 	private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
@@ -22,7 +22,7 @@ public class GoToViewNews implements Command {
 		
 		String id;
 
-		id = request.getParameter("id");
+		id = request.getParameter(NEWS_ID); // used to be id
 		
 		try {
 			news  = newsService.findById(Integer.parseInt(id));

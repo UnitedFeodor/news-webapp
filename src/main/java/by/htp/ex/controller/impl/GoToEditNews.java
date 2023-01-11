@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static by.htp.ex.bean.NewsAttributes.NEWS_ID;
+
 public class GoToEditNews implements Command {
 
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
@@ -20,7 +22,7 @@ public class GoToEditNews implements Command {
         News news;
         String id;
 
-        id = request.getParameter("id");
+        id = request.getParameter(NEWS_ID);
 
         try {
             news  = newsService.findById(Integer.parseInt(id));

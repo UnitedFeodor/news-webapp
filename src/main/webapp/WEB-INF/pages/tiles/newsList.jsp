@@ -22,10 +22,10 @@
 				<div class="news-link-to-wrapper">
 					<div class="link-position">
 						<c:if test="${sessionScope.role eq 'admin'}">
-						      <a href="controller?command=go_to_edit_news&id=${news.idNews}">edit </a>
+						      <a href="controller?command=go_to_edit_news&idNews=${news.idNews}">edit </a>
 						</c:if>
 						<span>&nbsp&nbsp</span>
-						<a href="controller?command=go_to_view_news&id=${news.idNews}">view </a>
+						<a href="controller?command=go_to_view_news&idNews=${news.idNews}">view </a>
    					    
    					    <c:if test="${sessionScope.role eq 'admin'}">
    					         <input type="checkbox" name="idNews" value="${news.idNews }" />

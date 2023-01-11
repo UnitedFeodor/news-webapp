@@ -38,16 +38,15 @@
                     </div></td>
             </tr>
         </table>
-</div>
 
 
-        <c:if test="${sessionScope.role eq 'admin'}">
+
+        <%-- <c:if test="${sessionScope.role eq 'admin'}"> --%>
         <div class="first-view-button">
             <!-- form -->
-                <input type="hidden" name="command" value="do_add_news" /> <input
-                    type="hidden" name="idNews" value="${news.idNews}" /> <input
-                    type="submit" value="Save" />
-
+            <input type="hidden" name="command" value="do_add_news" /> <input
+                type="hidden" name="idNews" value="${news.idNews}" /> <input
+                type="submit" value="Save" />
         </div>
     </form>
     <div class="second-view-button">
@@ -56,6 +55,6 @@
                 type="hidden" name="idNews" value="${news.idNews}" /> <input
                 type="submit" value="Cancel" />
         </form>
-
     </div>
-</c:if>
+</div>
+<%-- </c:if> --%>

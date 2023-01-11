@@ -9,19 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import static by.htp.ex.bean.NewsAttributes.*;
 
 public class DoAddNews implements Command {
-    private final String NEWS_TITLE = "news_title";
-    private final String NEWS_DATE = "news_date";
-    private final String NEWS_BRIEF = "news_brief";
-    private final String NEWS_CONTENT = "news_content";
-
-
 
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("idNews"));
+        int id = Integer.parseInt(request.getParameter(NEWS_ID));
 
         News newNews = new News(id,request.getParameter(NEWS_TITLE),request.getParameter(NEWS_BRIEF),request.getParameter(NEWS_CONTENT),request.getParameter(NEWS_DATE));
         newsService.add(newNews);

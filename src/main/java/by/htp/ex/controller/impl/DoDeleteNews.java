@@ -9,11 +9,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static by.htp.ex.bean.NewsAttributes.NEWS_ID;
+
 public class DoDeleteNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String[] newsIds = request.getParameterValues("idNews");
+        String[] newsIds = request.getParameterValues(NEWS_ID);
         if (newsIds != null) {
             newsService.delete(newsIds);
             response.sendRedirect("controller?command=go_to_news_list");
