@@ -14,13 +14,11 @@ public class FrontController extends HttpServlet {
 	private final CommandProvider provider = new CommandProvider();
        
 
-    public FrontController() {
-        super();
-    }
+	private final String COMMAND = "command";
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String commandName = request.getParameter("command");
+		String commandName = request.getParameter(COMMAND);
 
 		Command command = provider.getCommand(commandName);
 		command.execute(request, response);

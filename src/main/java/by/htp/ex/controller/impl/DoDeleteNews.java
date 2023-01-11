@@ -19,7 +19,9 @@ public class DoDeleteNews implements Command {
             response.sendRedirect("controller?command=go_to_news_list");
         } else {
             request.setAttribute("error_msg","no news to delete selected");
-            request.getRequestDispatcher("/WEB-INF/pages/tiles/error.jsp").forward(request, response);
+            request.getRequestDispatcher("controller?command=go_to_error_page").forward(request, response);
+            //request.getRequestDispatcher("/WEB-INF/pages/tiles/error.jsp").forward(request, response);
+
             //response.sendRedirect("/WEB-INF/pages/tiles/error.jsp");
         }
         }

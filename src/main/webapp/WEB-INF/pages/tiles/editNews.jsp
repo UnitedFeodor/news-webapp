@@ -5,7 +5,7 @@
 </div>
 
 <div class="add-table-margin">
-    <form action="controller" method="post">
+    <form action="controller" method="post"> <!-- onsubmit="return validateNewsForm()" name="newsForm" -->
         <table class="news_text_format">
             <tr>
                 <td class="space_around_title_text">News Title</td>
@@ -38,18 +38,18 @@
                     </div></td>
             </tr>
         </table>
-</div>
-
 
         <c:if test="${sessionScope.role eq 'admin'}">
         <div class="first-view-button">
             <!-- form -->
+
                 <input type="hidden" name="command" value="do_edit_news" /> <input
                     type="hidden" name="idNews" value="${news.idNews}" /> <input
                     type="submit" value="Save" />
 
         </div>
     </form>
+
     <div class="second-view-button">
         <form action="controller">
             <input type="hidden" name="command" value="go_to_news_list" /> <input
@@ -58,4 +58,5 @@
         </form>
 
     </div>
+</div>
 </c:if>

@@ -6,7 +6,7 @@ import java.util.Map;
 import by.htp.ex.controller.impl.*;
 
 public class CommandProvider {
-	private Map<CommandName, Command> commands = new HashMap<>();
+	private final Map<CommandName, Command> commands = new HashMap<>();
 	
 	public CommandProvider() {
 		commands.put(CommandName.GO_TO_BASE_PAGE, new GoToBasePage());
@@ -20,13 +20,22 @@ public class CommandProvider {
 		commands.put(CommandName.DO_DELETE_NEWS, new DoDeleteNews());
 		commands.put(CommandName.DO_ADD_NEWS,new DoAddNews());
 		commands.put(CommandName.GO_TO_ADD_NEWS, new GoToAddNews());
+
+		commands.put(CommandName.GO_TO_ERROR_PAGE, new GoToErrorPage());
 	}
 	
 	
 	public Command getCommand(String name) {
-		CommandName  commandName = CommandName.valueOf(name.toUpperCase());
-		Command command = commands.get(commandName);
-		return command;
+
+		Command command;
+		try {
+			CommandName commandName = CommandName.valueOf(name.toUpperCase());
+			command = commands.get(commandName);
+			return command;
+		} catch (Exception e) {
+			command = commands.get(CommandName.GO_TO_ERROR_PAGE);
+			return command;
+		}
 	}
 
 }
