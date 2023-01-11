@@ -20,9 +20,10 @@
 					Enter login: <input type="text" name="login" value="" /><br /> 
 					Enter password: <input type="password" name="password" value="" /><br />
 
-					<c:if test="${not (requestScope.AuthenticationError eq null)}">
+					<c:if test="${not (sessionScope.AuthenticationError eq null)}">
 						<font color="red"> 
-						   <c:out value="${requestScope.AuthenticationError}" />
+						   <c:out value="${sessionScope.AuthenticationError}" />
+							<c:remove var="AuthenticationError"/>
 						</font> 
 					</c:if>
 					

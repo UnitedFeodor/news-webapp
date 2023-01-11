@@ -23,11 +23,11 @@ public class UserServiceImpl implements IUserService{
 		try {
 			if(userDAO.logination(login, password)) {
 				return userDAO.getRole(login, password);
-			}else {
+			} else {
 				return "guest";
 			}
 			
-		}catch(DaoException e) {
+		} catch(DaoException e) {
 			throw new ServiceException(e);
 		}
 		

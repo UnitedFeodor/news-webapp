@@ -28,8 +28,10 @@ public class UserDAO implements IUserDAO{
 
 		if(login.equalsIgnoreCase("admin")) {
 			return "admin";
-		} else {
+		} else if(login.equalsIgnoreCase("user")) {
 			return "user";
+		} else {
+			return "guest";
 		}
 
 	}

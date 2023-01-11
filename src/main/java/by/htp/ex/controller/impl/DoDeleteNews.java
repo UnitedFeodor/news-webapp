@@ -1,6 +1,7 @@
 package by.htp.ex.controller.impl;
 
 import by.htp.ex.controller.Command;
+import by.htp.ex.controller.impl.utilities.ControllerSecurity;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
@@ -11,10 +12,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.bean.attributes.NewsAttributes.NEWS_ID;
-import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
-import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
-import static by.htp.ex.controller.impl.utilities.ControllerUtilities.isRoleAdmin;
+import static by.htp.ex.controller.constants.NewsAttributes.NEWS_ID;
+import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
 
 public class DoDeleteNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
@@ -23,7 +22,7 @@ public class DoDeleteNews implements Command {
         HttpSession session = request.getSession(false);
         //String role = (String) session.getAttribute(USER_ROLE);
 
-        if (isRoleAdmin(session)) {
+        if (ControllerSecurity.canExecuteThisRequest(session)) {
             String[] newsIds = request.getParameterValues(NEWS_ID);
             if (newsIds != null) {
                 try {

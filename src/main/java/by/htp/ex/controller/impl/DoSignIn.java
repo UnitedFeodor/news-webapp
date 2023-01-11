@@ -9,8 +9,10 @@ import by.htp.ex.service.IUserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
+import static by.htp.ex.controller.constants.UserAttributes.USER_ROLE;
+import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
 
 public class DoSignIn implements Command {
 
@@ -33,23 +35,26 @@ public class DoSignIn implements Command {
 
 			String role = service.signIn(login, password);
 
-			if (!role.equals("guest")) {
+			if (!"guest".equals(role)) {
 				request.getSession(true).setAttribute("user", "active");
-				request.getSession(true).setAttribute(USER_ROLE, role);
+				request.getSession().setAttribute(USER_ROLE, role);
 				response.sendRedirect("controller?command=go_to_news_list");
 			} else {
-				request.getSession(true).setAttribute("user", "not active");
-				request.setAttribute("AuthenticationError", "wrong login or password");
-				request.getRequestDispatcher("/WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
+				HttpSession session = request.getSession(true);
+				session.setAttribute("user", "not active");
+				session.setAttribute("AuthenticationError", "wrong login or password");
+
+				response.sendRedirect("controller?command=go_to_base_page");
+				//request.getRequestDispatcher("/WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 			}
 			
 		} catch (ServiceException e) {
-			// logging e
-			// go-to error page
 
+			request.getSession(true).setAttribute(ERROR_MESSAGE,"sign in error");
+			response.sendRedirect("controller?command=go_to_error_page");
 		}
 
-		// response.getWriter().print("do logination");
+
 
 	}
 

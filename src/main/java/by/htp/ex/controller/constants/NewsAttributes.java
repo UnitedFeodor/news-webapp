@@ -1,6 +1,8 @@
-package by.htp.ex.bean.attributes;
+package by.htp.ex.controller.constants;
 
-public class NewsAttributes {
+public final class NewsAttributes {
+
+    private NewsAttributes(){}
     public static final String NEWS_TITLE = "news_title";
     public static final String NEWS_DATE = "news_date";
     public static final String NEWS_BRIEF = "news_brief";

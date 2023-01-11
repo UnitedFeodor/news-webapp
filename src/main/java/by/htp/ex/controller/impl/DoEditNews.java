@@ -2,6 +2,7 @@ package by.htp.ex.controller.impl;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.controller.Command;
+import by.htp.ex.controller.impl.utilities.ControllerSecurity;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
@@ -12,10 +13,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.bean.attributes.NewsAttributes.*;
-import static by.htp.ex.bean.attributes.UserAttributes.USER_ROLE;
-import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
-import static by.htp.ex.controller.impl.utilities.ControllerUtilities.isRoleAdmin;
+import static by.htp.ex.controller.constants.NewsAttributes.*;
+import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
 
 
 public class DoEditNews implements Command {
@@ -26,7 +25,7 @@ public class DoEditNews implements Command {
         HttpSession session = request.getSession(false);
         //String role = (String) session.getAttribute(USER_ROLE);
 
-        if (isRoleAdmin(session)) {
+        if (ControllerSecurity.canExecuteThisRequest(session)) {
             int id = Integer.parseInt(request.getParameter(NEWS_ID));
 
             News newNews = new News(id,request.getParameter(NEWS_TITLE),request.getParameter(NEWS_BRIEF),request.getParameter(NEWS_CONTENT),request.getParameter(NEWS_DATE));

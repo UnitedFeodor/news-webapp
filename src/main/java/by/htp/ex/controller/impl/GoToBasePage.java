@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import by.htp.ex.bean.News;
@@ -17,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import static by.htp.ex.bean.attributes.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
 
 public class GoToBasePage implements Command{
 	
