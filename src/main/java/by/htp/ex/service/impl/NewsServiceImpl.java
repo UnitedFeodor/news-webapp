@@ -14,38 +14,36 @@ public class NewsServiceImpl implements INewsService{
 	private final INewsDAO newsDAO = DaoProvider.getInstance().getNewsDAO();
 
 	@Override
-	public void delete(String[] newsIds) {
+	public void delete(String[] newsIds) throws ServiceException {
 		try {
 			newsDAO.deleteNews(newsIds);
 		} catch (NewsDAOException e) {
-			// TODO exception
+			throw new ServiceException(e);
 		}
 	}
 
 	@Override
-	public void add(News news) {
+	public void add(News news) throws ServiceException {
 		try {
 			newsDAO.addNews(news);
 		} catch (NewsDAOException e) {
-			throw new RuntimeException(e);
-			//TODO Exception
+			throw new ServiceException(e);
 		}
 
 	}
 
 	@Override
-	public void find() {
+	public void find()  throws ServiceException{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void update(News news) {
+	public void update(News news)  throws ServiceException{
 		try {
 			newsDAO.updateNews(news);
 		} catch (NewsDAOException e) {
-			throw new RuntimeException(e);
-			//TODO Exception
+			throw new ServiceException(e);
 		}
 		
 	}

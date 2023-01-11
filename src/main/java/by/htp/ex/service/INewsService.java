@@ -6,11 +6,11 @@ import by.htp.ex.bean.News;
 
 public interface INewsService {
 
-  void delete(String[] newsIds);
-  void add(News news);
+  void delete(String[] newsIds) throws ServiceException;
+  void add(News news) throws ServiceException;
 
-  void find();
-  void update(News news);
+  void find() throws ServiceException;
+  void update(News news) throws ServiceException;
   
   List<News> latestList(int count)  throws ServiceException;
   List<News> list()  throws ServiceException;

@@ -34,7 +34,7 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public boolean registration(NewUserInfo user) {
+	public boolean registration(NewUserInfo user)  throws ServiceException {
 		// TODO Auto-generated method stub
 		return false;
 	}

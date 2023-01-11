@@ -2,6 +2,7 @@ package by.htp.ex.controller.impl;
 
 import by.htp.ex.controller.Command;
 import by.htp.ex.service.INewsService;
+import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,12 @@ public class DoDeleteNews implements Command {
         if (isRoleAdmin(session)) {
             String[] newsIds = request.getParameterValues(NEWS_ID);
             if (newsIds != null) {
-                newsService.delete(newsIds);
+                try {
+                    newsService.delete(newsIds);
+                } catch (ServiceException e) {
+                    session.setAttribute(ERROR_MESSAGE,"delete error");
+                    response.sendRedirect("controller?command=go_to_error_page");
+                }
                 response.sendRedirect("controller?command=go_to_news_list");
             } else {
                 session.setAttribute(ERROR_MESSAGE,"no news to delete selected");
