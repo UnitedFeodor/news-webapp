@@ -3,6 +3,7 @@ package by.htp.ex.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import by.htp.ex.controller.impl.*;
 
 public class CommandProvider {
@@ -32,7 +33,7 @@ public class CommandProvider {
 			CommandName commandName = CommandName.valueOf(name.toUpperCase());
 			command = commands.get(commandName);
 			return command;
-		} catch (Exception e) {
+		} catch (Exception e) { // no such element
 			command = commands.get(CommandName.GO_TO_ERROR_PAGE);
 			return command;
 		}

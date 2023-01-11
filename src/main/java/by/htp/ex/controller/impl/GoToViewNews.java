@@ -12,6 +12,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import static by.htp.ex.bean.NewsAttributes.*;
+import static by.htp.ex.bean.ViewAttributes.PRESENTATION;
+
 public class GoToViewNews implements Command {
 	
 	private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
@@ -27,7 +29,7 @@ public class GoToViewNews implements Command {
 		try {
 			news  = newsService.findById(Integer.parseInt(id));
 			request.setAttribute("news", news);
-			request.setAttribute("presentation", "viewNews");
+			request.setAttribute(PRESENTATION, "viewNews");
 
 			request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 		} catch (ServiceException e) {

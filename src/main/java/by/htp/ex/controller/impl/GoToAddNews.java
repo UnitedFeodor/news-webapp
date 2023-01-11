@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static by.htp.ex.bean.ViewAttributes.PRESENTATION;
+
 public class GoToAddNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
 
@@ -25,7 +27,7 @@ public class GoToAddNews implements Command {
         }
         News news = new News(id, "", "", "", "");
         request.setAttribute("news", news);
-        request.setAttribute("presentation", "addNews");
+        request.setAttribute(PRESENTATION, "addNews");
         request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 
 

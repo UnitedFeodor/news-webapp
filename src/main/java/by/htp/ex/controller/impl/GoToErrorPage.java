@@ -7,12 +7,15 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static by.htp.ex.bean.ViewAttributes.ERROR_MESSAGE;
+
+
 public class GoToErrorPage implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getAttribute("error_msg") == null) {
+        if (request.getAttribute(ERROR_MESSAGE) == null) {
 
-            request.setAttribute("error_msg","no such command error");
+            request.setAttribute(ERROR_MESSAGE,"no such command error");
         }
         request.getRequestDispatcher("/WEB-INF/pages/tiles/error.jsp").forward(request, response);
     }

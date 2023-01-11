@@ -10,6 +10,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import static by.htp.ex.bean.UserAttributes.USER_ROLE;
+
 public class DoSignIn implements Command {
 
 	private final IUserService service = ServiceProvider.getInstance().getUserService();
@@ -33,7 +35,7 @@ public class DoSignIn implements Command {
 
 			if (!role.equals("guest")) {
 				request.getSession(true).setAttribute("user", "active");
-				request.getSession(true).setAttribute("role", role);
+				request.getSession(true).setAttribute(USER_ROLE, role);
 				response.sendRedirect("controller?command=go_to_news_list");
 			} else {
 				request.getSession(true).setAttribute("user", "not active");
