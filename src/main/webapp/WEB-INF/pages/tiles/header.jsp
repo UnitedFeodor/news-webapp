@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <div class="wrapper">
-	<div class="newstitle">News management</div>
+	<div class="newstitle"> ${header_name} </div> <!-- News management not yet wroking-->
 
 
 	<div class="local-link">
@@ -22,7 +22,7 @@
 
 					<c:if test="${not (sessionScope.AuthenticationError eq null)}">
 						<font color="red"> 
-						   <c:out value="${sessionScope.AuthenticationError}" />
+							<c:out value="${sessionScope.AuthenticationError}" />
 							<c:remove var="AuthenticationError"/>
 						</font> 
 					</c:if>
