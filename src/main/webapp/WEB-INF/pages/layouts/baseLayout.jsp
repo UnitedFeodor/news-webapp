@@ -13,17 +13,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="script/validation.js"></script>
-<title>locale.linkname.headertitle <%-- <bean:message key="locale.linkname.headertitle" />
- --%>
+<title>locale.linkname.headertitle  <bean:message key="locale.linkname.headertitle" />
+
 </title>
 
 <link rel="stylesheet" type="text/css" href="styles/newsStyle.css">
 
-	<fmt:setLocale value="sessionScore.local"/>
-	<fmt:setBundle basename="localization" var="loc"/>
+	<fmt:setLocale value="sessionScope.local" />
+	<fmt:setBundle basename="localization" var="loc" />
 
-	<fmt:message bundle="${loc}" key="header.name" var="header_name"/>
 	<fmt:message bundle="${loc}" key="wrapper.welcome" var="wrapper_welcome"/>
+
 
 </head>
 <body>
@@ -34,7 +34,8 @@
 				<c:param  name="header_name" value="${header_name}"/>
 			</c:url>
 			<c:import url = "${headerURL}"/> --%>
-
+			<c:out value="${loc}"/>
+				<c:out value="${wrapper_welcome}"/>
 			<c:import url="/WEB-INF/pages/tiles/header.jsp"/>
 				<%--
 				<c:param  name="header_name" value="header_name"/>
@@ -45,7 +46,8 @@
 			<div class="menu">
 
 				<c:if test="${not (sessionScope.user eq 'active')}">
-					${wrapper_welcome}
+					<c:out value="${wrapper_welcome}"/>
+
 
 					<%-- <c:import url=""></c:import> --%>
 				</c:if>

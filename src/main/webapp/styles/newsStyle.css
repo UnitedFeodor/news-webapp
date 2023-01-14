@@ -115,6 +115,14 @@ html,body {
 } 
 
 /* for header */
+
+/* Style the form - display items horizontally */
+.form-inline {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+}
+
  .wrapper {
 	margin-left: 20px;
 	position: relative;

@@ -21,6 +21,7 @@ public class CommandProvider {
 		commands.put(CommandName.DO_DELETE_NEWS, new DoDeleteNews());
 		commands.put(CommandName.DO_ADD_NEWS,new DoAddNews());
 		commands.put(CommandName.GO_TO_ADD_NEWS, new GoToAddNews());
+		commands.put(CommandName.DO_CHANGE_LANGUAGE,new DoChangeLanguage());
 
 		commands.put(CommandName.GO_TO_ERROR_PAGE, new GoToErrorPage());
 	}
