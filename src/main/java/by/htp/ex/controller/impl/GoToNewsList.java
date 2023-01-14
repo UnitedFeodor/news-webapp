@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
-import static by.htp.ex.controller.constants.ViewAttributes.PRESENTATION;
+import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
+import static by.htp.ex.controller.constants.ViewConstants.PRESENTATION;
 
 public class GoToNewsList implements Command {
 	
@@ -31,7 +31,7 @@ public class GoToNewsList implements Command {
 
 			request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 		} catch (ServiceException e) {
-			HttpSession session = request.getSession(false);
+			HttpSession session = request.getSession(true);
 			session.setAttribute(ERROR_MESSAGE,"cannot get the list of news");
 			response.sendRedirect("controller?command=go_to_error_page");
 		}

@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
 
 public class GoToBasePage implements Command{
 	
@@ -42,7 +42,7 @@ public class GoToBasePage implements Command{
 
 			request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 		} catch (ServiceException e) {
-			HttpSession session = request.getSession(false);
+			HttpSession session = request.getSession(true);
 			session.setAttribute(ERROR_MESSAGE,"cannot get the latest list of news");
 			response.sendRedirect("controller?command=go_to_error_page");
 		}

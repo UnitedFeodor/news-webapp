@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
 
 
 public class GoToErrorPage implements Command {

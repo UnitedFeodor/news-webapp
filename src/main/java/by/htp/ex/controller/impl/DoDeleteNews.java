@@ -1,6 +1,7 @@
 package by.htp.ex.controller.impl;
 
 import by.htp.ex.controller.Command;
+import by.htp.ex.controller.CommandName;
 import by.htp.ex.controller.impl.utilities.ControllerSecurity;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
@@ -12,8 +13,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.controller.constants.NewsAttributes.NEWS_ID;
-import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
+import static by.htp.ex.controller.constants.NewsConstants.NEWS_ID;
+import static by.htp.ex.controller.constants.UserConstants.USER_ROLE;
+import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
 
 public class DoDeleteNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
@@ -22,7 +24,7 @@ public class DoDeleteNews implements Command {
         HttpSession session = request.getSession(false);
         //String role = (String) session.getAttribute(USER_ROLE);
 
-        if (ControllerSecurity.canExecuteThisRequest(session)) {
+        if (ControllerSecurity.canExecuteThisRequest((String) session.getAttribute(USER_ROLE), CommandName.DO_DELETE_NEWS)) {
             String[] newsIds = request.getParameterValues(NEWS_ID);
             if (newsIds != null) {
                 try {

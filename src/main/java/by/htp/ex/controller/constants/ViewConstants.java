@@ -1,8 +1,10 @@
 package by.htp.ex.controller.constants;
 
-public final class ViewAttributes {
+public final class ViewConstants {
 
-    private ViewAttributes(){}
+    private ViewConstants(){}
     public static final String ERROR_MESSAGE = "error_msg";
     public static final String PRESENTATION = "presentation";
+
+
 }

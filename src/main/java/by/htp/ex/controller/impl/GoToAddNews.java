@@ -2,6 +2,7 @@ package by.htp.ex.controller.impl;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.controller.Command;
+import by.htp.ex.controller.CommandName;
 import by.htp.ex.controller.impl.utilities.ControllerSecurity;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
@@ -13,8 +14,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
-import static by.htp.ex.controller.constants.ViewAttributes.PRESENTATION;
+import static by.htp.ex.controller.constants.UserConstants.USER_ROLE;
+import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
+import static by.htp.ex.controller.constants.ViewConstants.PRESENTATION;
 
 public class GoToAddNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
@@ -24,7 +26,7 @@ public class GoToAddNews implements Command {
         HttpSession session = request.getSession(false);
         //String role = (String) session.getAttribute(USER_ROLE);
 
-        if (ControllerSecurity.canExecuteThisRequest(session)) {
+        if (ControllerSecurity.canExecuteThisRequest((String) session.getAttribute(USER_ROLE), CommandName.GO_TO_ADD_NEWS)) {
 
             int id;
             try {

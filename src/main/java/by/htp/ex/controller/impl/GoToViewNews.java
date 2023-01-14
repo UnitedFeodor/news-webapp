@@ -12,9 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import static by.htp.ex.controller.constants.NewsAttributes.*;
-import static by.htp.ex.controller.constants.ViewAttributes.ERROR_MESSAGE;
-import static by.htp.ex.controller.constants.ViewAttributes.PRESENTATION;
+import static by.htp.ex.controller.constants.NewsConstants.*;
+import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
+import static by.htp.ex.controller.constants.ViewConstants.PRESENTATION;
 
 public class GoToViewNews implements Command {
 	
