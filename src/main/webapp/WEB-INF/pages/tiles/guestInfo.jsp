@@ -1,9 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ include file="/WEB-INF/pages/tiles/localization/localizationBase.jsp" %>
 
-guest info
+${guestinfo_head}
 
 <div class="body-title">
-	<a href="">News >> </a> Latest News
+	<a href="">${goback_news} </a> ${guestinfo_goback_current}
 </div>
 
 <form action="command.do?method=delete" method="post">
@@ -27,8 +28,8 @@ guest info
 
 	<div class="no-news">
 		<c:if test="${requestScope.news eq null}">
-        No news.
-	</c:if>
+			${nonews}
+		</c:if>
 	</div>
 
 </form>

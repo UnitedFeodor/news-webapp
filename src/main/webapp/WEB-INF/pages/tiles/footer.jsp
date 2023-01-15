@@ -1,4 +1,4 @@
+<%@ include file="/WEB-INF/pages/tiles/localization/localizationBase.jsp" %>
 
-
-<center>footer
+<center>${footer_name}
 </center>

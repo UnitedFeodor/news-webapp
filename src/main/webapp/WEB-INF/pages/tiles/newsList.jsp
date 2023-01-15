@@ -1,8 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<%@ include file="/WEB-INF/pages/tiles/localization/localizationBase.jsp" %>
 
 <div class="body-title">
-	<a href="">News >> </a> News List
+	<a href="">${goback_news} </a> ${newslist_goback_current}
 </div>
 
 <form action="controller" method="post">
@@ -22,10 +22,10 @@
 				<div class="news-link-to-wrapper">
 					<div class="link-position">
 						<c:if test="${sessionScope.role eq 'admin'}">
-						      <a href="controller?command=go_to_edit_news&idNews=${news.idNews}">edit </a>
+						      <a href="controller?command=go_to_edit_news&idNews=${news.idNews}">${edit} </a>
 						</c:if>
 						<span>&nbsp&nbsp</span>
-						<a href="controller?command=go_to_view_news&idNews=${news.idNews}">view </a>
+						<a href="controller?command=go_to_view_news&idNews=${news.idNews}">${newslist_view} </a>
    					    
    					    <c:if test="${sessionScope.role eq 'admin'}">
    					         <input type="checkbox" name="idNews" value="${news.idNews }" />
@@ -42,7 +42,7 @@
         <div class="delete-button-position">
 
             <input type="hidden" name="command" value="do_delete_news" />
-            <input type="submit" value="Delete" />
+            <input type="submit" value="${delete}" />
 
         </div>
     </c:if>
@@ -59,7 +59,7 @@
 
 	<div class="no-news">
 		<c:if test="${requestScope.news eq null}">
-        No news.
+        ${nonews}
 	</c:if>
 	</div>
 </form>
