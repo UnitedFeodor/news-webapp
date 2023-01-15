@@ -29,8 +29,8 @@
 
 <!-- header.jsp-->
 <fmt:message bundle="${loc}" key="header.name" var="header_name"/>
-<fmt:message bundle="${loc}" key="button.en" var="button_en"/>
-<fmt:message bundle="${loc}" key="button.ru" var="button_ru"/>
+<fmt:message bundle="${loc}" key="header.en" var="button_en"/>
+<fmt:message bundle="${loc}" key="header.ru" var="button_ru"/>
 <fmt:message bundle="${loc}" key="header.logination.login" var="header_logination_login"/>
 <fmt:message bundle="${loc}" key="header.logination.password" var="header_logination_password" />
 <fmt:message bundle="${loc}" key="header.registration.link" var="header_registration_link" />
@@ -66,3 +66,10 @@
 
 <!-- viewNews.jsp-->
 <fmt:message bundle="${loc}" key="viewnews.goback.current" var="viewnews_goback_current"/>
+
+<!-- error.jsp -->
+<fmt:message bundle="${loc}" key="error.goback" var="error_goback"/>
+<fmt:message bundle="${loc}" key="error.message" var="error_message"/>
+
+<!-- AuthenticationError -->
+<fmt:message bundle="${loc}" key="auth.error.message" var="auth_error_message"/>

@@ -41,7 +41,7 @@
 
 					<c:if test="${not (sessionScope.AuthenticationError eq null)}">
 						<font color="red"> 
-							<c:out value="${sessionScope.AuthenticationError}" />
+							<c:out value="${auth_error_message}" />
 							<c:remove var="AuthenticationError"/>
 						</font> 
 					</c:if>
