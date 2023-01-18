@@ -20,11 +20,11 @@ import static by.htp.ex.controller.constants.ViewConstants.PRESENTATION;
 
 public class GoToAddNews implements Command {
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
-
+ //TODO : nullpointerexception for session
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        //String role = (String) session.getAttribute(USER_ROLE);
+
 
         if (ControllerSecurity.canExecuteThisRequest((String) session.getAttribute(USER_ROLE), CommandName.GO_TO_ADD_NEWS)) {
 

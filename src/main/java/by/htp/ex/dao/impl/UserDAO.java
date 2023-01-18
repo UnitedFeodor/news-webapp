@@ -7,11 +7,11 @@ import by.htp.ex.bean.NewUserInfo;
 import by.htp.ex.dao.DaoException;
 import by.htp.ex.dao.IUserDAO;
 
-public class UserDAO implements IUserDAO{
+public class UserDAO implements IUserDAO	{
 
 	@Override
 	public boolean logination(String login, String password) throws DaoException {
-		
+		// TODO Auto-generated method stub
 		/*
 		 * Random rand = new Random(); int value = rand.nextInt(1000);
 		 * 
@@ -39,7 +39,7 @@ public class UserDAO implements IUserDAO{
 	@Override
 	public boolean registration(NewUserInfo user) throws DaoException  {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

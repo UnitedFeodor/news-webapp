@@ -46,7 +46,7 @@
 						</font> 
 					</c:if>
 					
-					<a href="">${header_registration_link}</a> <input type="submit" value="${header_signin}" /><br />
+					<a href="controller?command=go_to_registration_page">${header_registration_link}</a> <input type="submit" value="${header_signin}" /><br />
 				</form>
 			</div>
 

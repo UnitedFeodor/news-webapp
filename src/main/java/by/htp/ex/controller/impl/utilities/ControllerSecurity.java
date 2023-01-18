@@ -19,7 +19,7 @@ public class ControllerSecurity {
             (DO_SIGN_OUT,GO_TO_VIEW_NEWS,GO_TO_NEWS_LIST,GO_TO_BASE_PAGE);
 
     private final static List<CommandName> guestRequests = List.of
-            (DO_SIGN_IN,DO_REGISTRATION,
+            (DO_SIGN_IN,DO_REGISTRATION, GO_TO_REGISTRATION_PAGE,
                 GO_TO_VIEW_NEWS,GO_TO_NEWS_LIST,GO_TO_BASE_PAGE);
 
     private final static Map<String,List<CommandName>> rolePermissions = new HashMap<>();
@@ -29,7 +29,9 @@ public class ControllerSecurity {
         rolePermissions.put(UserConstants.ROLE_GUEST,guestRequests);
     }
     public static boolean canExecuteThisRequest(String role, CommandName action) {
-
+        if(role == null) {
+            role = UserConstants.ROLE_GUEST;
+        }
         return rolePermissions.get(role) != null && rolePermissions.get(role).contains(action);
         //return role != null && role.equals("admin");
     }

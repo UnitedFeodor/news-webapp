@@ -18,7 +18,7 @@ public class FrontController extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		parseAndExecuteCommand(request, response);
+		parseAndExecuteCommand(request, response); //TODO: most likey save params of the request for localization go_back to current page
 	}
 
 

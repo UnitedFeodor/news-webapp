@@ -26,7 +26,7 @@ public class DoSignIn implements Command {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		if(session.getAttribute(USER_ROLE) == null || ControllerSecurity.canExecuteThisRequest((String) session.getAttribute(USER_ROLE), CommandName.DO_SIGN_IN)) {
+		if(ControllerSecurity.canExecuteThisRequest((String) session.getAttribute(USER_ROLE), CommandName.DO_SIGN_IN)) {
 			String login;
 			String password;
 

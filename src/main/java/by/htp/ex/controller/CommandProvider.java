@@ -11,7 +11,7 @@ public class CommandProvider {
 	
 	public CommandProvider() {
 		commands.put(CommandName.GO_TO_BASE_PAGE, new GoToBasePage());
-		commands.put(CommandName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPageCommand());
+		commands.put(CommandName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPage());
 		commands.put(CommandName.DO_SIGN_IN, new DoSignIn());
 		commands.put(CommandName.DO_SIGN_OUT, new DoSignOut());
 		commands.put(CommandName.GO_TO_NEWS_LIST, new GoToNewsList());
@@ -23,6 +23,7 @@ public class CommandProvider {
 		commands.put(CommandName.GO_TO_ADD_NEWS, new GoToAddNews());
 		commands.put(CommandName.DO_CHANGE_LANGUAGE,new DoChangeLanguage());
 
+		commands.put(CommandName.DO_REGISTRATION, new DoRegistration());
 		commands.put(CommandName.GO_TO_ERROR_PAGE, new GoToErrorPage());
 	}
 	

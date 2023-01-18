@@ -12,6 +12,6 @@ public class DoChangeLanguage implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getSession(true).setAttribute("local", request.getParameter("local"));
         //request.getRequestDispatcher("index.jsp").forward(request,response);
-        response.sendRedirect("controller?command=go_to_news_list");
+        response.sendRedirect("controller?command=go_to_news_list"); //TODO: same page go_to
     }
 }
