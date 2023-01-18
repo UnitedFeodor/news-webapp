@@ -41,7 +41,6 @@ public class GoToEditNews implements Command {
 
                 request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
             } catch (ServiceException e) {
-                //HttpSession session = request.getSession(false);
                 session.setAttribute(ERROR_MESSAGE, "cannot find the news by id");
                 response.sendRedirect("controller?command=go_to_error_page");
             }
