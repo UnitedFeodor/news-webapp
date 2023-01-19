@@ -60,8 +60,12 @@ public class UserDAO implements IUserDAO	{
 
 	@Override
 	public boolean registration(UserInfo user) throws DaoException  {
-		userStorage.add(user);
-		return true;
+		if(userStorage.stream().filter(o -> o.getEmail().equals(user.getEmail())).findAny().orElse(null) != null) {
+			return false;
+		} else {
+			userStorage.add(user);
+			return true;
+		}
 	}
 
 }

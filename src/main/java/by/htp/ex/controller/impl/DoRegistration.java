@@ -28,7 +28,7 @@ public class DoRegistration implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// TODO better error handling with filters etc.
-		// TODO success message for registration result
+
 
 		HttpSession session = request.getSession(false);
 
@@ -37,7 +37,12 @@ public class DoRegistration implements Command {
 				UserInfo newUser = new UserInfo();
 				newUser.setEmail(request.getParameter(JSP_LOGIN_PARAM));
 				newUser.setPassword(request.getParameter(JSP_PASSWORD_PARAM));
-				service.register(newUser);
+				if (!service.register(newUser)) {
+					session.setAttribute("register_error","err");
+				} else {
+
+					session.setAttribute("register_success", "suc");
+				}
 				response.sendRedirect("controller?command=go_to_base_page");
 			} catch (ServiceException e) {
 				session.setAttribute(ERROR_MESSAGE,"register error");

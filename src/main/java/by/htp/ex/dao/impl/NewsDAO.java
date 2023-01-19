@@ -20,7 +20,7 @@ public class NewsDAO implements INewsDAO {
 
 	}
 	@Override
-	public List<News> getLatestsList(int count) throws NewsDAOException {
+	public List<News> getLatestList(int count) throws NewsDAOException {
 
 		if (newsStorage.size() < count) {
 			return newsStorage;

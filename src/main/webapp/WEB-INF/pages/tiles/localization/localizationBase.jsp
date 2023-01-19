@@ -71,5 +71,12 @@
 <fmt:message bundle="${loc}" key="error.goback" var="error_goback"/>
 <fmt:message bundle="${loc}" key="error.message" var="error_message"/>
 
-<!-- AuthenticationError -->
+<!-- auth_error -->
 <fmt:message bundle="${loc}" key="auth.error.message" var="auth_error_message"/>
+<!-- success messages -->
+<fmt:message bundle="${loc}" key="save.success" var="save_success_message"/>
+<fmt:message bundle="${loc}" key="register.success" var="register_success_message"/>
+<fmt:message bundle="${loc}" key="delete.success" var="delete_success_message"/>
+
+<fmt:message bundle="${loc}" key="register.error" var="register_error_message"/>
+

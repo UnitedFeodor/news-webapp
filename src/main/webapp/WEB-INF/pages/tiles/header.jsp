@@ -39,13 +39,27 @@
 					${header_logination_login} <input type="text" name="login" value="" /><br />
 					${header_logination_password} <input type="password" name="password" value="" /><br />
 
-					<c:if test="${not (sessionScope.AuthenticationError eq null)}">
+					<c:if test="${not (sessionScope.auth_error eq null)}">
 						<font color="red"> 
 							<c:out value="${auth_error_message}" />
-							<c:remove var="AuthenticationError"/>
+							<c:remove var="auth_error"/>
 						</font> 
 					</c:if>
-					
+
+					<c:if test="${not (sessionScope.register_success eq null)}">
+						<font color="green">
+							<c:out value="${register_success_message}" />
+							<c:remove var="register_success"/>
+						</font>
+					</c:if>
+
+					<c:if test="${not (sessionScope.register_error eq null)}">
+						<font color="red">
+							<c:out value="${register_error_message}" />
+							<c:remove var="register_error"/>
+						</font>
+					</c:if>
+
 					<a href="controller?command=go_to_registration_page">${header_registration_link}</a> <input type="submit" value="${header_signin}" /><br />
 				</form>
 			</div>
@@ -59,7 +73,23 @@
 					<input type="hidden" name="command" value="do_sign_out" /> 
 					<input type="submit" value="${header_signout}" /><br />
 				</form>
+
+				<c:if test="${not (sessionScope.save_success eq null)}">
+					<font color="green">
+						<c:out value="${save_success_message}" />
+						<c:remove var="save_success"/>
+					</font>
+				</c:if>
+				<c:if test="${not (sessionScope.delete_success eq null)}">
+					<font color="green">
+						<c:out value="${delete_success_message}" />
+						<c:remove var="delete_success"/>
+					</font>
+				</c:if>
+
 			</div>
+
+
 
 		</c:if>
 	</div>

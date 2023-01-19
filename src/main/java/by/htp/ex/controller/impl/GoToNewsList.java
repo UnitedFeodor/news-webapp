@@ -25,7 +25,9 @@ public class GoToNewsList implements Command {
 		List<News> newsList;
 		try {
 			newsList = newsService.list();
-			request.setAttribute("news", newsList);
+			if (newsList.size() > 0) {
+				request.setAttribute("news", newsList);
+			}
 			request.setAttribute(PRESENTATION, "newsList");
 			//request.setAttribute("news", null);
 

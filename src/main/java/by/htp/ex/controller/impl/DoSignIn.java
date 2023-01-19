@@ -46,7 +46,7 @@ public class DoSignIn implements Command {
 				} else {
 					session = request.getSession(true);
 					session.setAttribute("user", "not active");
-					session.setAttribute("AuthenticationError", "wrong login or password");
+					session.setAttribute("auth_error", "wrong login or password");
 
 					response.sendRedirect("controller?command=go_to_base_page");
 					//request.getRequestDispatcher("/WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);

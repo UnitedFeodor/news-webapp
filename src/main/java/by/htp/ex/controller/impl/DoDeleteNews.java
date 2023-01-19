@@ -18,7 +18,7 @@ import static by.htp.ex.controller.constants.UserConstants.USER_ROLE;
 import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
 
 public class DoDeleteNews implements Command {
-    //TODO add success  message
+
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,6 +34,7 @@ public class DoDeleteNews implements Command {
                     session.setAttribute(ERROR_MESSAGE,"delete error");
                     response.sendRedirect("controller?command=go_to_error_page");
                 }
+                session.setAttribute("delete_success","suc");
                 response.sendRedirect("controller?command=go_to_news_list");
             } else {
                 session.setAttribute(ERROR_MESSAGE,"no news to delete selected");

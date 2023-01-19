@@ -1,5 +1,7 @@
 package by.htp.ex.service.impl;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import by.htp.ex.bean.News;
@@ -35,7 +37,6 @@ public class NewsServiceImpl implements INewsService{
 	@Override
 	public void find()  throws ServiceException{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -52,7 +53,14 @@ public class NewsServiceImpl implements INewsService{
 	public List<News> latestList(int count) throws ServiceException {
 		
 		try {
-			return newsDAO.getLatestsList(count);
+			List<News> latestNews = newsDAO.getLatestList(count); //TODO sort first with sql requset or something
+			latestNews.sort((o1, o2) -> {
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+				LocalDate date1 = LocalDate.parse(o1.getNewsDate(), formatter);
+				LocalDate date2 = LocalDate.parse(o2.getNewsDate(), formatter);
+				return date2.compareTo(date1);
+			});
+			return latestNews;
 		} catch (NewsDAOException e) {
 			throw new ServiceException(e);
 		}
