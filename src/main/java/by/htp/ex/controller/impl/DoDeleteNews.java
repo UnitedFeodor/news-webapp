@@ -18,6 +18,7 @@ import static by.htp.ex.controller.constants.UserConstants.USER_ROLE;
 import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
 
 public class DoDeleteNews implements Command {
+    //TODO add success  message
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

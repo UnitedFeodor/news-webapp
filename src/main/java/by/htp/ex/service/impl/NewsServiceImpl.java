@@ -10,7 +10,7 @@ import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 
 public class NewsServiceImpl implements INewsService{
-
+	// TODO Service param check everywhere in impl
 	private final INewsDAO newsDAO = DaoProvider.getInstance().getNewsDAO();
 
 	@Override

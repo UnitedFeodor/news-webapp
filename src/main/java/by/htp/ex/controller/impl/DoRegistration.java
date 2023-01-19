@@ -2,7 +2,7 @@ package by.htp.ex.controller.impl;
 
 import java.io.IOException;
 
-import by.htp.ex.bean.NewUserInfo;
+import by.htp.ex.bean.UserInfo;
 import by.htp.ex.controller.Command;
 import by.htp.ex.controller.CommandName;
 import by.htp.ex.controller.impl.utilities.ControllerSecurity;
@@ -26,8 +26,7 @@ public class DoRegistration implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Service param check everywhere in impl
-		//	TODO userdao like newsdao fake implementation
+
 		// TODO better error handling with filters etc.
 		// TODO success message for registration result
 
@@ -35,7 +34,7 @@ public class DoRegistration implements Command {
 
 		if (ControllerSecurity.canExecuteThisRequest((String) session.getAttribute(USER_ROLE), CommandName.DO_REGISTRATION)) {
 			try {
-				NewUserInfo newUser = new NewUserInfo();
+				UserInfo newUser = new UserInfo();
 				newUser.setEmail(request.getParameter(JSP_LOGIN_PARAM));
 				newUser.setPassword(request.getParameter(JSP_PASSWORD_PARAM));
 				service.register(newUser);

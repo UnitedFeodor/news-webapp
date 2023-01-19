@@ -37,7 +37,7 @@ public class NewsDAO implements INewsDAO {
 
 	@Override
 	public News fetchById(int id) throws NewsDAOException {
-		return newsStorage.stream().filter(o -> o.getIdNews().equals(id)).findFirst().orElse(null);
+		return newsStorage.stream().filter(o -> o.getIdNews().equals(id)).findAny().orElse(null);
 		//return new News(1, "title1", "brief1brief1brief1brief1brief1brief1brief1", "contect1", "11/11/22");
 	}
 
