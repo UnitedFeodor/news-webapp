@@ -3,8 +3,8 @@ package by.htp.ex.controller.impl;
 import java.io.IOException;
 
 import by.htp.ex.controller.Command;
-import by.htp.ex.controller.CommandName;
-import by.htp.ex.controller.impl.utilities.ControllerSecurity;
+import by.htp.ex.controller.constants.UserConstants;
+import by.htp.ex.controller.constants.ViewConstants;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
 import by.htp.ex.service.IUserService;
@@ -12,9 +12,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import static by.htp.ex.controller.constants.UserConstants.USER_ROLE;
-import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
 
 public class DoSignIn implements Command {
 
@@ -25,43 +22,32 @@ public class DoSignIn implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String login;
+		String password;
+		login = request.getParameter(JSP_LOGIN_PARAM);
+		password = request.getParameter(JSP_PASSWORD_PARAM);
 		HttpSession session = request.getSession(false);
-		if(ControllerSecurity.canExecuteThisRequest((String) session.getAttribute(USER_ROLE), CommandName.DO_SIGN_IN)) {
-			String login;
-			String password;
+		try {
 
-			login = request.getParameter(JSP_LOGIN_PARAM);
-			password = request.getParameter(JSP_PASSWORD_PARAM);
+			String role = service.signIn(login, password);
 
-			// small validation
+			if (!"guest".equals(role)) {
+				session.setAttribute(UserConstants.USER_ACTIVITY, "active");
+				session.setAttribute(UserConstants.USER_ROLE, role);
+				response.sendRedirect("controller?command=go_to_news_list");
+			} else {
+				session.setAttribute(UserConstants.USER_ACTIVITY, "not active");
+				session.setAttribute("auth_error", "wrong login or password");
 
-			try {
-
-				String role = service.signIn(login, password);
-
-				if (!"guest".equals(role)) {
-					request.getSession(true).setAttribute("user", "active");
-					request.getSession().setAttribute(USER_ROLE, role);
-					response.sendRedirect("controller?command=go_to_news_list");
-				} else {
-					session = request.getSession(true);
-					session.setAttribute("user", "not active");
-					session.setAttribute("auth_error", "wrong login or password");
-
-					response.sendRedirect("controller?command=go_to_base_page");
-					//request.getRequestDispatcher("/WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
-				}
-
-			} catch (ServiceException e) {
-
-				request.getSession(true).setAttribute(ERROR_MESSAGE, "sign in error");
-				response.sendRedirect("controller?command=go_to_error_page");
+				response.sendRedirect("controller?command=go_to_base_page");
 			}
-		} else {
-			session.setAttribute(ERROR_MESSAGE,"user with such role cannot sign in");
-			response.sendRedirect("controller?command=go_to_error_page");
 
+		} catch (ServiceException e) {
+
+			session.setAttribute(ViewConstants.ERROR_MESSAGE, "sign in error");
+			response.sendRedirect("controller?command=go_to_error_page");
 		}
+
 
 
 	}

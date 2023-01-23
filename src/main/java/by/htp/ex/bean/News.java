@@ -1,17 +1,20 @@
 package by.htp.ex.bean;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class News implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Integer idNews=0;
-	private String title="";
-	private String briefNews="";
-	private String content="";
-	private String newsDate="";
+	private Integer idNews = 0;
+	private String title = "";
+	private String briefNews = "";
+	private String content = "";
+	private String newsDate = "";
 	
 	public News(){}
 
@@ -61,7 +64,7 @@ public class News implements Serializable {
 		return newsDate;
 	}
 
-	public void setNewsDate(String newsDate) {
+	public void setNewsDate(String newsDate) throws DateTimeParseException {
 		this.newsDate = newsDate;
 	}
 

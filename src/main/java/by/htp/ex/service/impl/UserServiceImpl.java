@@ -9,6 +9,10 @@ import by.htp.ex.service.IUserService;
 
 public class UserServiceImpl implements IUserService{
 
+	public static final String ROLE_ADMIN = "admin";
+	public static final String ROLE_USER = "user";
+	public static final String ROLE_GUEST = "guest";
+
 	private final IUserDAO userDAO = DaoProvider.getInstance().getUserDao();
 //	private final UserDataValidation userDataValidation = ValidationProvider.getIntsance().getUserDataVelidation();
 	
@@ -24,7 +28,7 @@ public class UserServiceImpl implements IUserService{
 			if(userDAO.logination(login, password)) {
 				return userDAO.getRole(login, password);
 			} else {
-				return "guest";
+				return ROLE_GUEST;
 			}
 			
 		} catch(DaoException e) {
@@ -36,11 +40,7 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public boolean register(UserInfo user)  throws ServiceException {
 		try {
-			if(userDAO.registration(user)) {
-				return true;
-			} else {
-				return false;
-			}
+			return userDAO.registration(user);
 
 		} catch(DaoException e) {
 			throw new ServiceException(e);

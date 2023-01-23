@@ -5,6 +5,7 @@ import java.util.List;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.controller.Command;
+import by.htp.ex.controller.constants.ViewConstants;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
@@ -13,8 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
-import static by.htp.ex.controller.constants.ViewConstants.PRESENTATION;
+
 
 public class GoToNewsList implements Command {
 	
@@ -26,15 +26,14 @@ public class GoToNewsList implements Command {
 		try {
 			newsList = newsService.list();
 			if (newsList.size() > 0) {
-				request.setAttribute("news", newsList);
+				request.setAttribute(ViewConstants.NEWS, newsList);
 			}
-			request.setAttribute(PRESENTATION, "newsList");
-			//request.setAttribute("news", null);
+			request.setAttribute(ViewConstants.PRESENTATION, ViewConstants.NEWS_LIST);
 
 			request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 		} catch (ServiceException e) {
-			HttpSession session = request.getSession(true);
-			session.setAttribute(ERROR_MESSAGE,"cannot get the list of news");
+			HttpSession session = request.getSession(false);
+			session.setAttribute(ViewConstants.ERROR_MESSAGE,"cannot get the list of news");
 			response.sendRedirect("controller?command=go_to_error_page");
 		}
 		

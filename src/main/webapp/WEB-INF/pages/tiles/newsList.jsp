@@ -38,7 +38,7 @@
 
 	</c:forEach>
 
-    <c:if test="${sessionScope.role eq 'admin'}">
+    <c:if test="${(sessionScope.role eq 'admin') and (not (requestScope.news eq null))}">
         <div class="delete-button-position">
 
             <input type="hidden" name="command" value="do_delete_news" />

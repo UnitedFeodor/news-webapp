@@ -4,22 +4,21 @@ import by.htp.ex.controller.CommandName;
 import by.htp.ex.controller.constants.UserConstants;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static by.htp.ex.controller.CommandName.*;
 
-public class ControllerSecurity {
+public class Security {
 
     // no stuff that ALL users can do
     private final static List<CommandName> adminRequests = List.of
-            (DO_ADD_NEWS,DO_DELETE_NEWS,DO_EDIT_NEWS,DO_SIGN_OUT,
+            (DO_ADD_NEWS,DO_DELETE_NEWS,DO_EDIT_NEWS,DO_SIGN_OUT, DO_CHANGE_LANGUAGE,
                     GO_TO_ADD_NEWS,GO_TO_EDIT_NEWS,GO_TO_BASE_PAGE,GO_TO_VIEW_NEWS,
                     GO_TO_NEWS_LIST,GO_TO_ERROR_PAGE);
     private final static List<CommandName> userRequests = List.of
-            (DO_SIGN_OUT,GO_TO_VIEW_NEWS,GO_TO_NEWS_LIST,GO_TO_BASE_PAGE);
+            (DO_SIGN_OUT,GO_TO_VIEW_NEWS,GO_TO_NEWS_LIST,GO_TO_BASE_PAGE, DO_CHANGE_LANGUAGE);
 
     private final static List<CommandName> guestRequests = List.of
-            (DO_SIGN_IN,DO_REGISTRATION, GO_TO_REGISTRATION_PAGE,
+            (DO_SIGN_IN,DO_REGISTRATION, DO_CHANGE_LANGUAGE, GO_TO_REGISTRATION_PAGE,
                 GO_TO_VIEW_NEWS,GO_TO_NEWS_LIST,GO_TO_BASE_PAGE);
 
     private final static Map<String,List<CommandName>> rolePermissions = new HashMap<>();

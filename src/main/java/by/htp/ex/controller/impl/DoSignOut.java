@@ -7,16 +7,18 @@ import by.htp.ex.controller.constants.UserConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class DoSignOut implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-			request.getSession(true).setAttribute("user", "not active");
-			request.getSession().setAttribute(UserConstants.USER_ROLE, UserConstants.ROLE_GUEST);
-			response.sendRedirect("index.jsp");
-		
+		HttpSession session = request.getSession(false);
+		session.setAttribute(UserConstants.USER_ACTIVITY, "not active");
+		session.setAttribute(UserConstants.USER_ROLE, UserConstants.ROLE_GUEST);
+		response.sendRedirect("index.jsp");
+
 	}
 
 }

@@ -49,25 +49,31 @@
 		<div class="base-layout-wrapper">
 			<div class="menu">
 
-				<c:if test="${not (sessionScope.user eq 'active')}">
+				<c:if test="${not (sessionScope.userActivity eq 'active')}">
 					<c:out value="${wrapper_welcome}"/>
 
 
 					<%-- <c:import url=""></c:import> --%>
 				</c:if>
-				<c:if test="${sessionScope.user eq 'active'}">
+				<c:if test="${sessionScope.userActivity eq 'active'}">
 					<c:import url="/WEB-INF/pages/tiles/menu.jsp" />
 				</c:if>
 		</div>
 
 		<div class="content">
+				<c:choose>
+					<c:when test="${not empty sessionScope.error_msg}">
+						<c:import url="/WEB-INF/pages/tiles/error.jsp"/>
+					</c:when>
+					<c:when test="${not (sessionScope.userActivity eq 'active')}">
+						<c:import url="/WEB-INF/pages/tiles/guestBody.jsp" />
+					</c:when>
+					<c:when test="${(sessionScope.userActivity eq 'active')}">
+						<c:import url="/WEB-INF/pages/tiles/body.jsp" />
+					</c:when>
+				</c:choose>
 
-				<c:if test="${not (sessionScope.user eq 'active')}">
-					<c:import url="/WEB-INF/pages/tiles/guestBody.jsp" />
-				</c:if>
-				<c:if test="${sessionScope.user eq 'active'}">
-					<c:import url="/WEB-INF/pages/tiles/body.jsp" />
-				</c:if>
+
 
 
 			</div>

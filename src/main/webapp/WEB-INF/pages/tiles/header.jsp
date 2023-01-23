@@ -17,21 +17,24 @@
 	<div class="local-link">
 
 		<div align="right">
-			<form class="form-inline" style ='display:inline-block;' action="controller" method="post">
+			<!-- <%--
+			<form class="form-inline" style ='display:inline-block;' action="controller" method="get">
 				<input type="hidden" name="command" value="do_change_language" />
 				<input type="hidden" name="local" value="en" />
 				<input type="submit" name="en" value="${header_en}" />
-				<!--<a href="controller?command=do_change_language"> en </a> &nbsp;&nbsp; -->
+
 			</form>
-			<form class="form-inline" style ='display:inline-block;' action="controller" method="post">
+			<form class="form-inline" style ='display:inline-block;' action="controller" method="get">
 				<input type="hidden" name="command" value="do_change_language" />
 				<input type="hidden" name="local" value="ru" />
 				<input type="submit" name="ru" value="${header_ru}" />
-				<!--<a href=""> ru </a> <br /> <br /> -->
-			</form>
+
+			</form> --%> -->
+			<a href="controller?command=do_change_language&local=en"> ${header_en} </a> &nbsp;&nbsp;
+			<a href="controller?command=do_change_language&local=ru"> ${header_ru} </a> <br /> <br />
 		</div>
 
-		<c:if test="${not (sessionScope.user eq 'active')}">
+		<c:if test="${not (sessionScope.userActivity eq 'active')}">
 
 			<div align="right">
 				<form action="controller" method="post">
@@ -66,7 +69,7 @@
 
 		</c:if>
 		
-		<c:if test="${sessionScope.user eq 'active'}">
+		<c:if test="${sessionScope.userActivity eq 'active'}">
 
 			<div align="right">
 				<form action="controller" method="post">

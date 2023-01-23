@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.controller.Command;
+import by.htp.ex.controller.constants.NewsConstants;
+import by.htp.ex.controller.constants.ViewConstants;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
@@ -12,9 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import static by.htp.ex.controller.constants.NewsConstants.*;
-import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
-import static by.htp.ex.controller.constants.ViewConstants.PRESENTATION;
+
 
 public class GoToViewNews implements Command {
 	
@@ -23,21 +23,19 @@ public class GoToViewNews implements Command {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		News news;
-		
 		String id;
-
-		id = request.getParameter(NEWS_ID); // used to be id
+		id = request.getParameter(NewsConstants.NEWS_ID); // used to be id
 		
 		try {
 			news  = newsService.findById(Integer.parseInt(id));
-			request.setAttribute("news", news);
-			request.setAttribute(PRESENTATION, "viewNews");
+			request.setAttribute(ViewConstants.NEWS, news);
+			request.setAttribute(ViewConstants.PRESENTATION, ViewConstants.VIEW_NEWS);
 
 			request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
 		} catch (ServiceException e) {
 
 			HttpSession session = request.getSession(false);
-			session.setAttribute(ERROR_MESSAGE,"cannot find the news by id");
+			session.setAttribute(ViewConstants.ERROR_MESSAGE,"cannot find the news by id");
 			response.sendRedirect("controller?command=go_to_error_page");
 		}
 		
