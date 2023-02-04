@@ -24,6 +24,10 @@
 		<location>/controller?command=go_to_error_page</location>
 	</error-page>
 
+	<listener>
+		<listener-class>by.htp.ex.controller.listeners.AppContextListener</listener-class>
+	</listener>
+
 
 	<filter>
 		<display-name>CharsetFilter</display-name>

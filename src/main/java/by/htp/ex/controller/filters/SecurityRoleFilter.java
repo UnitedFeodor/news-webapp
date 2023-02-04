@@ -1,9 +1,9 @@
 package by.htp.ex.controller.filters;
 
 import by.htp.ex.controller.CommandName;
-import by.htp.ex.controller.constants.UserConstants;
-import by.htp.ex.controller.constants.ViewConstants;
-import by.htp.ex.controller.impl.utilities.Security;
+import by.htp.ex.constants.UserConstants;
+import by.htp.ex.constants.ViewConstants;
+import by.htp.ex.controller.utilities.Security;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.controller.constants.ViewConstants.ERROR_MESSAGE;
+import static by.htp.ex.constants.ViewConstants.ERROR_MESSAGE;
 
 
 public class SecurityRoleFilter implements Filter {

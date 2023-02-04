@@ -12,6 +12,7 @@ import by.htp.ex.dao.NewsDAOException;
 
 public class NewsDAO implements INewsDAO {
 
+	// TODO implement db
 	List<News> newsStorage = new ArrayList<>();
 	{
 		newsStorage.add(new News(1, "title1", "brief1brief1brief1brief1brief1brief1brief1", "content1", "07/11/22"));

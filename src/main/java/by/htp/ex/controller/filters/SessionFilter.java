@@ -1,6 +1,6 @@
 package by.htp.ex.controller.filters;
 
-import by.htp.ex.controller.constants.UserConstants;
+import by.htp.ex.constants.UserConstants;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

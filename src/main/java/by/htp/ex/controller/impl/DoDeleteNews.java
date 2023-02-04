@@ -1,8 +1,8 @@
 package by.htp.ex.controller.impl;
 
 import by.htp.ex.controller.Command;
-import by.htp.ex.controller.constants.NewsConstants;
-import by.htp.ex.controller.constants.ViewConstants;
+import by.htp.ex.constants.NewsConstants;
+import by.htp.ex.constants.ViewConstants;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;

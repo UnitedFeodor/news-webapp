@@ -1,4 +1,4 @@
-package by.htp.ex.controller.impl.utilities;
+package by.htp.ex.controller.utilities;
 
 import java.util.Map;
 

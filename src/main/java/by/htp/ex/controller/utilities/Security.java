@@ -1,7 +1,7 @@
-package by.htp.ex.controller.impl.utilities;
+package by.htp.ex.controller.utilities;
 
 import by.htp.ex.controller.CommandName;
-import by.htp.ex.controller.constants.UserConstants;
+import by.htp.ex.constants.UserConstants;
 
 import java.util.*;
 

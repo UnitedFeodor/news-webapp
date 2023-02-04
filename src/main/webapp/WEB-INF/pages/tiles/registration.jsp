@@ -11,9 +11,17 @@
 <div class="add-table-margin">
     <form action="controller" method="post">
             ${header_logination_login}
-        <input type="text" name="login"/> <br>
+        <input  type="text" name="login"/> <br>
             ${header_logination_password}
-        <input type="text" name="password"/> <br>
+        <input  type="text" name="password"/> <br>
+
+
+            ${registration_name}
+        <input class="space_around_title_text" type="text" name="name"/> <br>
+            ${registration_surname}
+        <input class="space_around_title_text" type="text" name="surname"/> <br>
+            ${registration_birthday}
+        <input class="space_around_title_text" type="text" name="birthday"/> <br>
 
         <input type="hidden" name="command" value="do_registration" />
         <input type="submit" value="${save}"/>

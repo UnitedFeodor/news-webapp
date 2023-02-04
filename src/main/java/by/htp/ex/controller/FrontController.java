@@ -3,7 +3,7 @@ package by.htp.ex.controller;
 import java.io.IOException;
 import java.io.Serial;
 
-import by.htp.ex.controller.constants.ViewConstants;
+import by.htp.ex.constants.ViewConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

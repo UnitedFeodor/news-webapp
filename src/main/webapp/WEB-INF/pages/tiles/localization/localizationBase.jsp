@@ -3,9 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ page import="java.util.ResourceBundle" %>
-<%@ page import="jakarta.servlet.jsp.jstl.fmt.LocalizationContext" %>
-
 <%-- the include to copy
  <%@ include file="/WEB-INF/pages/tiles/localization/localizationBase.jsp" %>
  --%>
@@ -80,3 +77,7 @@
 
 <fmt:message bundle="${loc}" key="register.error" var="register_error_message"/>
 
+<!-- registration.jsp -->
+<fmt:message bundle="${loc}" key="registration.name" var="registration_name"/>
+<fmt:message bundle="${loc}" key="registration.surname" var="registration_surname"/>
+<fmt:message bundle="${loc}" key="registration.birthday" var="registration_birthday"/>

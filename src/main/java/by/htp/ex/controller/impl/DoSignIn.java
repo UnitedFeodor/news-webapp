@@ -3,8 +3,8 @@ package by.htp.ex.controller.impl;
 import java.io.IOException;
 
 import by.htp.ex.controller.Command;
-import by.htp.ex.controller.constants.UserConstants;
-import by.htp.ex.controller.constants.ViewConstants;
+import by.htp.ex.constants.UserConstants;
+import by.htp.ex.constants.ViewConstants;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
 import by.htp.ex.service.IUserService;
@@ -26,7 +26,7 @@ public class DoSignIn implements Command {
 		String password;
 		login = request.getParameter(JSP_LOGIN_PARAM);
 		password = request.getParameter(JSP_PASSWORD_PARAM);
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession(false);// TODO add user cabinet to change details and see them
 		try {
 
 			String role = service.signIn(login, password);

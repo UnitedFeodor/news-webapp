@@ -1,6 +1,6 @@
 package by.htp.ex.service.impl;
 
-import by.htp.ex.bean.UserInfo;
+import by.htp.ex.bean.User;
 import by.htp.ex.dao.DaoException;
 import by.htp.ex.dao.DaoProvider;
 import by.htp.ex.dao.IUserDAO;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public boolean register(UserInfo user)  throws ServiceException {
+	public boolean register(User user)  throws ServiceException {
 		try {
 			return userDAO.registration(user);
 

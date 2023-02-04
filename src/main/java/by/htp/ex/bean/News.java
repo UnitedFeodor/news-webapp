@@ -10,7 +10,7 @@ public class News implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Integer idNews = 0;
+	private Integer idNews = -1; // TODO update to match the database
 	private String title = "";
 	private String briefNews = "";
 	private String content = "";
