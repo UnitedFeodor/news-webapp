@@ -5,6 +5,8 @@ import by.htp.ex.dao.connection_pool.ConnectionPoolProvider;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
+import static by.htp.ex.constants.ViewConstants.ERROR_MESSAGE;
+
 public class AppContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -13,6 +15,8 @@ public class AppContextListener implements ServletContextListener {
             ConnectionPoolProvider.getInstance().initPoolData();
         } catch (ConnectionPoolException e) {
 
+            //session.setAttribute(ERROR_MESSAGE,"no command passed in request");
+            e.printStackTrace();
             throw new RuntimeException(e); //TODO handle
         }
         ServletContextListener.super.contextInitialized(sce);

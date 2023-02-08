@@ -19,14 +19,14 @@
                 <td class="space_around_title_text">${date}</td>
 
                 <td class="space_around_view_text"><div class="word-breaker">
-                         <input type="text" name="news_date" value="<c:out value="${requestScope.news.newsDate }"/>"/>
+                         <input type="text" name="news_date" value="<fmt:formatDate value="${news.newsDate}" pattern="dd/MM/yyyy" />"/>
 
                     </div></td>
             </tr>
             <tr>
                 <td class="space_around_title_text">${brief}</td>
                 <td class="space_around_view_text"><div class="word-breaker">
-                    <textarea rows="7" cols="30" name="news_brief" style="resize: none;"><c:out value="${requestScope.news.briefNews }" /></textarea>
+                    <textarea rows="7" cols="30" name="news_brief" style="resize: none;"><c:out value="${requestScope.news.brief }" /></textarea>
 
                 </div></td>
             </tr>

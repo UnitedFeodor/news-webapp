@@ -17,6 +17,7 @@ public class DoSignOut implements Command {
 		HttpSession session = request.getSession(false);
 		session.setAttribute(UserConstants.USER_ACTIVITY, "not active");
 		session.setAttribute(UserConstants.USER_ROLE, UserConstants.ROLE_GUEST);
+		session.removeAttribute(UserConstants.USER_ID);
 		response.sendRedirect("index.jsp");
 
 	}

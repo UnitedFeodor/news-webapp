@@ -11,8 +11,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static by.htp.ex.constants.ViewConstants.ERROR_MESSAGE;
-
 
 public class SecurityRoleFilter implements Filter {
 
@@ -37,7 +35,7 @@ public class SecurityRoleFilter implements Filter {
 
         String commandNameStr = request.getParameter(ViewConstants.COMMAND);
         if (commandNameStr == null) {
-            session.setAttribute(ERROR_MESSAGE,"no command passed in request");
+            session.setAttribute(ViewConstants.ERROR_MESSAGE,"no command passed in request");
             chain.doFilter(filteredRequest,response);
 
         } else {
@@ -48,11 +46,11 @@ public class SecurityRoleFilter implements Filter {
                     chain.doFilter(request,response);
 
                 } else {
-                    session.setAttribute(ERROR_MESSAGE,"cannot do this request for this role");
+                    session.setAttribute(ViewConstants.ERROR_MESSAGE,"cannot do this request for this role");
                     chain.doFilter(filteredRequest,response);
                 }
             } catch (IllegalArgumentException e) {
-                session.setAttribute(ERROR_MESSAGE,"invalid command passed in request");
+                session.setAttribute(ViewConstants.ERROR_MESSAGE,"invalid command passed in request");
                 chain.doFilter(filteredRequest,response);
             }
 

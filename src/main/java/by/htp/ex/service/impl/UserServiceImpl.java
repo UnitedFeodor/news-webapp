@@ -17,7 +17,7 @@ public class UserServiceImpl implements IUserService{
 //	private final UserDataValidation userDataValidation = ValidationProvider.getIntsance().getUserDataVelidation();
 	
 	@Override
-	public String signIn(String login, String password) throws ServiceException {
+	public User signIn(String login, String password) throws ServiceException {
 		
 		/*
 		 * if(!userDataValidation.checkAUthData(login, password)) { throw new
@@ -26,15 +26,25 @@ public class UserServiceImpl implements IUserService{
 		
 		try {
 			if(userDAO.logination(login, password)) {
-				return userDAO.getRole(login, password);
+				return userDAO.getUserByLogin(login);
 			} else {
-				return ROLE_GUEST;
+				return null; // TODO may be a bad idea
 			}
 			
 		} catch(DaoException e) {
 			throw new ServiceException(e);
 		}
 		
+	}
+
+
+	@Override
+	public int getId(String login) throws ServiceException {
+		try {
+			return userDAO.getIdByLogin(login);
+		} catch (DaoException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override

@@ -8,4 +8,7 @@ public interface IUserDAO {
 	boolean registration(User user) throws DaoException;
 	String getRole(String login, String password) throws DaoException;
 
+	int getIdByLogin(String login) throws DaoException;
+	User getUserByLogin(String login) throws DaoException;
+
 }

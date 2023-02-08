@@ -2,6 +2,7 @@ package by.htp.ex.controller.impl;
 
 import java.io.IOException;
 
+import by.htp.ex.bean.User;
 import by.htp.ex.controller.Command;
 import by.htp.ex.constants.UserConstants;
 import by.htp.ex.constants.ViewConstants;
@@ -29,11 +30,13 @@ public class DoSignIn implements Command {
 		HttpSession session = request.getSession(false);// TODO add user cabinet to change details and see them
 		try {
 
-			String role = service.signIn(login, password);
+			User user = service.signIn(login, password);
 
-			if (!"guest".equals(role)) {
+			if (user != null) {
+				session.setAttribute(UserConstants.USER_ID,service);
 				session.setAttribute(UserConstants.USER_ACTIVITY, "active");
-				session.setAttribute(UserConstants.USER_ROLE, role);
+				session.setAttribute(UserConstants.USER_ROLE, user.getRole());
+				session.setAttribute(UserConstants.USER_ID,user.getId());
 				response.sendRedirect("controller?command=go_to_news_list");
 			} else {
 				session.setAttribute(UserConstants.USER_ACTIVITY, "not active");

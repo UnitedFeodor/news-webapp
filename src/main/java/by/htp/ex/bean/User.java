@@ -23,7 +23,7 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
-	private long id = -1;
+	private int id = -1;
 	private String email;
 	private String password;
 	private String role;
@@ -58,11 +58,11 @@ public class User implements Serializable {
 
 
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

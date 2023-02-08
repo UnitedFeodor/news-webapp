@@ -1,28 +1,35 @@
 package by.htp.ex.bean;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.sql.Date;
 import java.util.Objects;
 
 public class News implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Integer idNews = -1; // TODO update to match the database
+	private Integer idNews = -1;
 	private String title = "";
-	private String briefNews = "";
+	private String brief = "";
 	private String content = "";
-	private String newsDate = "";
-	
+	private Date newsDate = new Date(System.currentTimeMillis());
+
+	private Integer authorId = -1;
+	private Integer statusId = 1;
+
+
+
 	public News(){}
 
-	public News(int idNews, String title, String briefNews, String content, String newsDate) {
+	public News(int idNews){
+		this.idNews = idNews;
+	}
+
+	public News(int idNews, String title, String brief, String content, Date newsDate) {
 		super();
 		this.idNews = idNews;
 		this.title = title;
-		this.briefNews = briefNews;
+		this.brief = brief;
 		this.content = content;
 		this.newsDate = newsDate;
 	}
@@ -43,12 +50,12 @@ public class News implements Serializable {
 		this.title = title;
 	}
 
-	public String getBriefNews() {
-		return briefNews;
+	public String getBrief() {
+		return brief;
 	}
 
-	public void setBriefNews(String briefNews) {
-		this.briefNews = briefNews;
+	public void setBrief(String brief) {
+		this.brief = brief;
 	}
 
 	public String getContent() {
@@ -60,11 +67,27 @@ public class News implements Serializable {
 		
 	}
 
-	public String getNewsDate() {
+	public Integer getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(Integer authorId) {
+		this.authorId = authorId;
+	}
+
+	public Integer getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Integer statusId) {
+		this.statusId = statusId;
+	}
+
+	public Date getNewsDate() {
 		return newsDate;
 	}
 
-	public void setNewsDate(String newsDate) throws DateTimeParseException {
+	public void setNewsDate(Date newsDate) {
 		this.newsDate = newsDate;
 	}
 
@@ -73,11 +96,11 @@ public class News implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		News news = (News) o;
-		return Objects.equals(idNews, news.idNews) && Objects.equals(title, news.title) && Objects.equals(briefNews, news.briefNews) && Objects.equals(content, news.content) && Objects.equals(newsDate, news.newsDate);
+		return idNews.equals(news.idNews) && title.equals(news.title) && brief.equals(news.brief) && content.equals(news.content) && newsDate.equals(news.newsDate) && authorId.equals(news.authorId) && statusId.equals(news.statusId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idNews, title, briefNews, content, newsDate);
+		return Objects.hash(idNews, title, brief, content, newsDate, authorId, statusId);
 	}
 }

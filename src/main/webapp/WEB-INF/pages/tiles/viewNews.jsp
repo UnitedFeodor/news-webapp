@@ -17,13 +17,13 @@
 			<td class="space_around_title_text">${date}</td>
 
 			<td class="space_around_view_text"><div class="word-breaker">
-					<c:out value="${requestScope.news.newsDate }" />
+				<fmt:formatDate value="${news.newsDate}" pattern="dd/MM/yyyy" />
 				</div></td>
 		</tr>
 		<tr>
 			<td class="space_around_title_text">${brief}</td>
 			<td class="space_around_view_text"><div class="word-breaker">
-					<c:out value="${requestScope.news.briefNews }" />
+					<c:out value="${requestScope.news.brief }" />
 				</div></td>
 		</tr>
 		<tr>

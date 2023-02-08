@@ -8,13 +8,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 public class ConnectionPool {
-    private BlockingQueue<Connection> connectionQueue; //TODO init in listener
+    private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
     private String driverName;
     private String url;
     private String user;
     private String password;
-    private int poolSize; //TODO fix or delete or smth
+    private int poolSize;
 
     public ConnectionPool() {
         this.driverName = (DBConstants.DB_DRIVER);
@@ -36,8 +36,11 @@ public class ConnectionPool {
                         url,
                         user,
                         password);
+
                 PooledConnection pooledConnection = new PooledConnection(connection);
                 connectionQueue.add(pooledConnection);
+
+
             }
         } catch (SQLException e) {
             throw new ConnectionPoolException("SQLException in ConnectionPool", e);

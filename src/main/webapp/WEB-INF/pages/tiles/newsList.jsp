@@ -13,11 +13,12 @@
 					<c:out value="${news.title}" />
 				</div>
 				<div class="news-date">
-					<c:out value="${news.newsDate}" />
+					<fmt:formatDate value="${news.newsDate}" pattern="dd/MM/yyyy" />
+					<%-- <c:out value="${news.newsDate}" /> --%>
 				</div>
 
 				<div class="news-content">
-					<c:out value="${news.briefNews}" />
+					<c:out value="${news.brief}" />
 				</div>
 				<div class="news-link-to-wrapper">
 					<div class="link-position">

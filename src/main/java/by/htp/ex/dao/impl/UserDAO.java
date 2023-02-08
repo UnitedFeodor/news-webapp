@@ -12,28 +12,6 @@ import by.htp.ex.dao.connection_pool.ConnectionPoolProvider;
 import by.htp.ex.dao.connection_pool.DBConstants;
 
 public class UserDAO implements IUserDAO	{
-	/*
-	public static final String ROLE_ADMIN = "admin";
-	public static final String ROLE_USER = "user";
-	public static final String ROLE_GUEST = "guest";
-*/
-	//private ConnectionPool connectionPool = new ConnectionPool();
-
-	/*
-	List<User> userStorage = new ArrayList<>();
-	{
-		userStorage.add(new User("s","s2", UserConstants.ROLE_USER));
-		userStorage.add(new User("ss","ross", UserConstants.ROLE_USER));
-
-	}
-	List<User> adminStorage = new ArrayList<>();
-	{
-		adminStorage.add(new User("sss","s3",UserConstants.ROLE_ADMIN));
-		adminStorage.add(new User("ted","kaczynski",UserConstants.ROLE_ADMIN));
-
-	}*/
-
-
 	private static final int ROLE_ID_USER = 1;
 	private static final int ROLE_ID_ADMIN = 2;
 	private static final int ROLE_ID_GUEST = 3;
@@ -45,35 +23,21 @@ public class UserDAO implements IUserDAO	{
 	private static final String Q_GET_ALL_USERS = "SELECT * FROM users";
 	private static final String Q_GET_USER_BY_LOGIN_AND_PASSWORD = "SELECT * FROM users WHERE login = ? AND password = ?";
 	private static final String Q_GET_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
+
+	private static final String Q_GET_ID_BY_LOGIN = "SELECT id FROM users WHERE login = ?";
 	private static final String Q_GET_ROLE_BY_ID = "SELECT * FROM roles WHERE id = ?";
 	private static final String Q_INSERT_USER = "INSERT INTO users (login,password,roles_id,status_id) VALUES (?,?,?,?)";
 
 	private static final String Q_INSERT_USER_DETAILS = "INSERT INTO user_details (users_id,name,surname,birthday) VALUES (?,?,?,?)";
 	@Override
 	public boolean logination(String login, String password) throws DaoException {
-		/*
-		try {
-			Class.forName(DBConstants.DB_DRIVER);
-		} catch (ClassNotFoundException e) {
-			throw new DaoException(e);
-		}
-		try(Connection connection = DriverManager.getConnection(DBConstants.DB_URL, DBConstants.DB_USER,
-				DBConstants.DB_PASSWORD)) {
-		*/
-		//try(Connection connection = connectionPool.takeConnection()) {
+
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
 			try(PreparedStatement statement = connection.prepareStatement(Q_GET_USER_BY_LOGIN_AND_PASSWORD)) {
 				statement.setString(1,login);
 				statement.setString(2,password);
 				try(ResultSet rs = statement.executeQuery()) {
 					return rs.isBeforeFirst();
-					/*
-					if (!rs.isBeforeFirst() ) {
-						return false; // no such login found in db
-					} else {
-
-						return true;
-					}*/
 				}
 			}
 
@@ -83,30 +47,12 @@ public class UserDAO implements IUserDAO	{
 			throw new DaoException(e);
 		}
 
-		/*
-		User user = userStorage.stream().filter(o -> o.getEmail().equals(login)).findAny().orElse(null);
-		User admin;
-		if (user == null) {
-			admin = adminStorage.stream().filter(o -> o.getEmail().equals(login)).findAny().orElse(null);
-			return admin != null && admin.getPassword().equals(password);
-		}
 
-		return user.getPassword().equals(password);
-	*/
 	}
 
-	
+	@Override
 	public String getRole(String login, String password) throws DaoException {
-		/*
-		try {
-			Class.forName(DBConstants.DB_DRIVER);
-		} catch (ClassNotFoundException e) {
-			throw new DaoException(e);
-		}
-		try(Connection connection = DriverManager.getConnection(DBConstants.DB_URL, DBConstants.DB_USER,
-				DBConstants.DB_PASSWORD)) {
-		*/
-		//try(Connection connection = connectionPool.takeConnection()) {
+
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
 			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
 				getUserStatement.setString(1,login);
@@ -136,94 +82,114 @@ public class UserDAO implements IUserDAO	{
 		} catch (ConnectionPoolException e) {
 			throw new DaoException(e);
 		}
-
-/*
-		if(adminStorage.stream().filter(o -> o.getEmail().equals(login)).findAny().orElse(null) != null) {
-			return UserConstants.ROLE_ADMIN;
-		} else if(userStorage.stream().filter(o -> o.getEmail().equals(login)).findAny().orElse(null) != null) {
-			return UserConstants.ROLE_USER;
-		} else {
-			return UserConstants.ROLE_GUEST;
-		}
-*/
 	}
 
 	@Override
-	public boolean registration(User user) throws DaoException  {
-		/*
-		try {
-			Class.forName(DBConstants.DB_DRIVER);
-		} catch (ClassNotFoundException e) {
-			throw new DaoException(e);
-		}
-		try(Connection connection = DriverManager.getConnection(DBConstants.DB_URL, DBConstants.DB_USER,
-				DBConstants.DB_PASSWORD)) {
-		*/	//try(Connection connection = connectionPool.takeConnection()) {
+	public User getUserByLogin(String login) throws DaoException {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
 			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
-				getUserStatement.setString(1,user.getEmail());
+				getUserStatement.setString(1,login);
 				try(ResultSet rs = getUserStatement.executeQuery()) {
-
-
-					if (!rs.isBeforeFirst() ) { // no such login found in db
-						try(PreparedStatement insertUserStatement = connection.prepareStatement(Q_INSERT_USER,Statement.RETURN_GENERATED_KEYS)) {
-							insertUserStatement.setString(1,user.getEmail());
-							insertUserStatement.setString(2,user.getPassword());
-							insertUserStatement.setInt(3,roleToRoleId(user.getRole()));
-							insertUserStatement.setInt(4,STATUS_ID_INACTIVE);
-							int modifiedRows = insertUserStatement.executeUpdate();
-							if (modifiedRows != 1) {
-								throw new SQLException("error inserting user data into the table");
-							} else {
-								try (ResultSet generatedKeys = insertUserStatement.getGeneratedKeys()) {
-									if (generatedKeys.next()) {
-										user.setId(generatedKeys.getLong(1));
-									}
-									else {
-										throw new SQLException("creating user failed, no ID obtained");
-									}
-									try(PreparedStatement insertDetailsStatement = connection.prepareStatement(Q_INSERT_USER_DETAILS)) {
-										insertDetailsStatement.setLong(1,user.getId());
-										insertDetailsStatement.setString(2,user.getName());
-										insertDetailsStatement.setString(3, user.getSurname());
-										if(user.getBirthday() != null) {
-											insertDetailsStatement.setDate(4, Date.valueOf(user.getBirthday()));
-										} else {
-											insertDetailsStatement.setNull(4,Types.DATE);
-										}
-										modifiedRows = insertDetailsStatement.executeUpdate();
-										if (modifiedRows != 1) {
-											throw new SQLException("error inserting user details data into the table");
-										}
-
-									}
-								}
-
-
-
-								return true;
-							}
-						}
-
+					User foundUser;
+					if (!rs.isBeforeFirst() ) {
+						throw new DaoException("no user with such login found"); // no such login found in db
 					} else {
-						return false; // such login found in db
+						rs.next();
+						foundUser = new User(login,rs.getString(UserConstants.DB_PASSWORD));
+						foundUser.setId(rs.getInt(UserConstants.DB_ID));
+						String role = roleIdToRole(rs.getInt(UserConstants.DB_ROLE_ID)); // TODO ask: not very good to do this without db?
+						foundUser.setRole(role);
+
+						return foundUser;
+
+
 					}
 				}
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new DaoException(e);
 		} catch (ConnectionPoolException e) {
 			throw new DaoException(e);
 		}
-		/*
-		if(userStorage.stream().filter(o -> o.getEmail().equals(user.getEmail())).findAny().orElse(null) != null) {
-			return false;
-		} else {
-			userStorage.add(user);
-			return true;
-		}*/
+	}
+
+	@Override
+	public int getIdByLogin(String login) throws DaoException {
+		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
+			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
+				getUserStatement.setString(1,login);
+				try(ResultSet rs = getUserStatement.executeQuery()) {
+					User foundUser;
+					if (!rs.isBeforeFirst() ) {
+						throw new DaoException("no user with such login found"); // no such login found in db
+					} else {
+						rs.next();
+
+						return rs.getInt(1);
+					}
+				}
+			}
+
+		} catch (SQLException e) {
+			throw new DaoException(e);
+		} catch (ConnectionPoolException e) {
+			throw new DaoException(e);
+		}
+	}
+
+	@Override
+	public boolean registration(User user) throws DaoException  { // TODO use salt to store passwords
+		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
+			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
+				getUserStatement.setString(1,user.getEmail());
+				try(ResultSet rs = getUserStatement.executeQuery()) {
+					if (rs.isBeforeFirst() ) { // such login found in db
+						return false;
+					}
+				}
+			}
+			try(PreparedStatement insertUserStatement = connection.prepareStatement(Q_INSERT_USER,Statement.RETURN_GENERATED_KEYS)) {
+				insertUserStatement.setString(1,user.getEmail());
+				insertUserStatement.setString(2,user.getPassword());
+				insertUserStatement.setInt(3,roleToRoleId(user.getRole()));
+				insertUserStatement.setInt(4,STATUS_ID_INACTIVE);
+				int modifiedRows = insertUserStatement.executeUpdate();
+				if (modifiedRows != 1) {
+					throw new SQLException("error inserting user data into the table");
+				}
+
+				try (ResultSet generatedKeys = insertUserStatement.getGeneratedKeys()) {
+					if (generatedKeys.next()) {
+						user.setId(generatedKeys.getInt(1));
+					}
+					else {
+						throw new SQLException("creating user failed, no ID obtained");
+					}
+					try(PreparedStatement insertDetailsStatement = connection.prepareStatement(Q_INSERT_USER_DETAILS)) {
+						insertDetailsStatement.setLong(1,user.getId());
+						insertDetailsStatement.setString(2,user.getName());
+						insertDetailsStatement.setString(3, user.getSurname());
+						if(user.getBirthday() != null) {
+							insertDetailsStatement.setDate(4, Date.valueOf(user.getBirthday()));
+						} else {
+							insertDetailsStatement.setNull(4,Types.DATE);
+						}
+						modifiedRows = insertDetailsStatement.executeUpdate();
+						if (modifiedRows != 1) {
+							throw new SQLException("error inserting user details data into the table");
+						}
+					}
+				}
+				return true;
+			}
+
+		} catch (SQLException e) {
+			throw new DaoException(e);
+		} catch (ConnectionPoolException e) {
+			throw new DaoException(e);
+		}
+
 	}
 
 	private int roleToRoleId(String role) throws DaoException {
@@ -241,6 +207,24 @@ public class UserDAO implements IUserDAO	{
 				throw new DaoException("role doesn't exist"); // maybe exception
 			}
 
+		}
+
+	}
+
+	private String roleIdToRole(int roleId) throws DaoException {
+		switch (roleId) {
+			case ROLE_ID_USER -> {
+				return UserConstants.ROLE_USER;
+			}
+			case ROLE_ID_ADMIN -> {
+				return UserConstants.ROLE_ADMIN;
+			}
+			case ROLE_ID_GUEST -> {
+				return UserConstants.ROLE_GUEST;
+			}
+			default -> {
+				throw new DaoException("role with such id doesn't exist"); // maybe exception
+			}
 
 		}
 

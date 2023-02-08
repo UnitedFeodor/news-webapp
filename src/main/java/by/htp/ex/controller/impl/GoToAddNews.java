@@ -24,12 +24,12 @@ public class GoToAddNews implements Command {
 
         int id;
         try {
-            id = newsService.list().size() + 1;
-            News news = new News(id, "", "", "", "");
+            //id = newsService.list().size() + 1;
+            News news = new News();
             request.setAttribute(ViewConstants.NEWS, news);
             request.setAttribute(ViewConstants.PRESENTATION, ViewConstants.ADD_NEWS);
             request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
-        } catch (ServiceException e) {
+        } catch (Exception e) { // TODO exact exception
             HttpSession session = request.getSession(false);
             session.setAttribute(ViewConstants.ERROR_MESSAGE,"cannot get the list of news");
             response.sendRedirect("controller?command=go_to_error_page");

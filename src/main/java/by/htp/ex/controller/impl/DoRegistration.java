@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import by.htp.ex.bean.User;
+import by.htp.ex.constants.UserConstants;
 import by.htp.ex.controller.Command;
 import by.htp.ex.constants.ViewConstants;
 import by.htp.ex.service.IUserService;
@@ -14,7 +15,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 
 
 public class DoRegistration implements Command {
@@ -51,6 +51,7 @@ public class DoRegistration implements Command {
 				session.setAttribute("register_error","err");
 			} else {
 
+				//session.setAttribute(UserConstants.USER_ID,service.getId(request.getParameter(JSP_LOGIN_PARAM)));
 				session.setAttribute("register_success", "suc");
 			}
 			response.sendRedirect("controller?command=go_to_base_page");

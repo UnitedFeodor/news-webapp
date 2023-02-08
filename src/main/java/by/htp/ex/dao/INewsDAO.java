@@ -7,10 +7,10 @@ import by.htp.ex.bean.News;
 
 
 public interface INewsDAO {
-	List<News> getList() throws NewsDAOException;
-	List<News> getLatestList(int count) throws NewsDAOException;
-	News fetchById(int id) throws NewsDAOException;
-	int addNews(News news) throws NewsDAOException;
-	void updateNews(News news) throws NewsDAOException;
-	void deleteNews(String[] idNewses)throws NewsDAOException;
+	List<News> getList() throws DaoException;
+	List<News> getLatestList(int count) throws DaoException;
+	News fetchById(int id) throws DaoException;
+	int addNews(News news) throws DaoException;
+	void updateNews(News news) throws DaoException;
+	void deleteNews(String[] idNewses)throws DaoException;
 }
