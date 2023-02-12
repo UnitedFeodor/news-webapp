@@ -15,7 +15,6 @@ import by.htp.ex.dao.connection_pool.ConnectionPoolProvider;
 
 public class NewsDAO implements INewsDAO {
 
-	// TODO implement db
 
 	private static final String Q_INSERT_NEWS = "INSERT INTO news (title, date_added, brief, content, authors_user_id, news_status_id) VALUES (?,?,?,?,?,?)";
 

@@ -17,7 +17,7 @@ public class User implements Serializable {
 		this.password = password;
 		this.role = UserConstants.ROLE_USER;
 	}
-	public User(String email, String password,String role) {
+	public User(String email, String password, String role) {
 		this.email = email;
 		this.password = password;
 		this.role = role;

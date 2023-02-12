@@ -7,7 +7,7 @@ ${guestinfo_head}
 	<a href="">${goback_news} </a> ${guestinfo_goback_current}
 </div>
 
-<form action="command.do?method=delete" method="post">
+<form action="controller" method="post">
 	<c:forEach var="news" items="${requestScope.news}">
 		<div class="single-news-wrapper">
 			<div class="single-news-header-wrapper">

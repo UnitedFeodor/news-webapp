@@ -10,6 +10,7 @@ import by.htp.ex.dao.connection_pool.ConnectionPool;
 import by.htp.ex.dao.connection_pool.ConnectionPoolException;
 import by.htp.ex.dao.connection_pool.ConnectionPoolProvider;
 import by.htp.ex.dao.connection_pool.DBConstants;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDAO implements IUserDAO	{
 	private static final int ROLE_ID_USER = 1;
@@ -21,7 +22,7 @@ public class UserDAO implements IUserDAO	{
 	private static final int STATUS_ID_BLOCKED = 3;
 
 	private static final String Q_GET_ALL_USERS = "SELECT * FROM users";
-	private static final String Q_GET_USER_BY_LOGIN_AND_PASSWORD = "SELECT * FROM users WHERE login = ? AND password = ?";
+	//private static final String Q_GET_USER_BY_LOGIN_AND_PASSWORD = "SELECT * FROM users WHERE login = ? AND password = ?";
 	private static final String Q_GET_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
 
 	private static final String Q_GET_ID_BY_LOGIN = "SELECT id FROM users WHERE login = ?";
@@ -33,11 +34,23 @@ public class UserDAO implements IUserDAO	{
 	public boolean logination(String login, String password) throws DaoException {
 
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
-			try(PreparedStatement statement = connection.prepareStatement(Q_GET_USER_BY_LOGIN_AND_PASSWORD)) {
+			try(PreparedStatement statement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
 				statement.setString(1,login);
-				statement.setString(2,password);
+
+
+
+				//statement.setString(2,password);
 				try(ResultSet rs = statement.executeQuery()) {
-					return rs.isBeforeFirst();
+					if (rs.isBeforeFirst()) {
+						rs.next();
+						String hashedPassword = rs.getString(UserConstants.DB_PASSWORD);
+						return BCrypt.checkpw(password,hashedPassword);
+
+					} else {
+						return false; // no such login in db
+					}
+				} catch (IllegalArgumentException e) {
+					return false;
 				}
 			}
 
@@ -139,7 +152,11 @@ public class UserDAO implements IUserDAO	{
 	}
 
 	@Override
-	public boolean registration(User user) throws DaoException  { // TODO use salt to store passwords
+	/**
+	 *
+	 *  user param is affected
+	 */
+	public boolean registration(User user) throws DaoException  {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
 			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
 				getUserStatement.setString(1,user.getEmail());
@@ -151,7 +168,12 @@ public class UserDAO implements IUserDAO	{
 			}
 			try(PreparedStatement insertUserStatement = connection.prepareStatement(Q_INSERT_USER,Statement.RETURN_GENERATED_KEYS)) {
 				insertUserStatement.setString(1,user.getEmail());
-				insertUserStatement.setString(2,user.getPassword());
+
+				String password = user.getPassword();
+				String salt = BCrypt.gensalt();
+				String hashedPassword = BCrypt.hashpw(password,salt);
+
+				insertUserStatement.setString(2,hashedPassword);
 				insertUserStatement.setInt(3,roleToRoleId(user.getRole()));
 				insertUserStatement.setInt(4,STATUS_ID_INACTIVE);
 				int modifiedRows = insertUserStatement.executeUpdate();

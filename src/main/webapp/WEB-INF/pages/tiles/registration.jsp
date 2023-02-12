@@ -15,6 +15,12 @@
             ${header_logination_password}
         <input  type="text" name="password"/> <br>
 
+        <label for="roles">${registration_role}</label>
+        <select name="roles" id="roles">
+            <option value="user">${registration_role_user}</option>
+            <option value="admin">${registration_role_admin}</option>
+        </select>
+        <br><br>
 
             ${registration_name}
         <input class="space_around_title_text" type="text" name="name"/> <br>

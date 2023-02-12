@@ -10,7 +10,7 @@
 
 	<div class="list-menu-invisible-wrapper">
 		<div class="list-menu-wrapper" style="float: right;">
-			<ul style="list-style-image: url(images/img.jpg); text-align: left;">
+			<ul style="text-align: left;">
 				<li style="padding-left: 15px;">
 				
 				<a href="controller?command=go_to_news_list">${list_news}</a><br />

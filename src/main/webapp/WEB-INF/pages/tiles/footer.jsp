@@ -1,4 +1,4 @@
 <%@ include file="/WEB-INF/pages/tiles/localization/localizationBase.jsp" %>
 
-<center>${footer_name}
-</center>
+<div style="text-align: center;">${footer_name}
+</div>

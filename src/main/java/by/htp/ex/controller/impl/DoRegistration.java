@@ -28,6 +28,7 @@ public class DoRegistration implements Command {
 	private static final String JSP_SURNAME_PARAM = "surname";
 	private static final String JSP_BIRTHDAY_PARAM = "birthday";
 
+	private static final String JSP_ROLE_PARAM = "roles";
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -37,6 +38,7 @@ public class DoRegistration implements Command {
 			User newUser = new User();
 			newUser.setEmail(request.getParameter(JSP_LOGIN_PARAM));
 			newUser.setPassword(request.getParameter(JSP_PASSWORD_PARAM));
+			newUser.setRole(request.getParameter(JSP_ROLE_PARAM));
 
 			String name = request.getParameter(JSP_NAME_PARAM) != null ? request.getParameter(JSP_NAME_PARAM) : "";
 			String surname = request.getParameter(JSP_SURNAME_PARAM) != null ? request.getParameter(JSP_SURNAME_PARAM) : "";

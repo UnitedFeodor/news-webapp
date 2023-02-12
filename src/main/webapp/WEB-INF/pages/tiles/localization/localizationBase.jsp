@@ -81,3 +81,8 @@
 <fmt:message bundle="${loc}" key="registration.name" var="registration_name"/>
 <fmt:message bundle="${loc}" key="registration.surname" var="registration_surname"/>
 <fmt:message bundle="${loc}" key="registration.birthday" var="registration_birthday"/>
+
+<fmt:message bundle="${loc}" key="registration.role" var="registration_role"/>
+<fmt:message bundle="${loc}" key="registration.role.admin" var="registration_role_admin"/>
+<fmt:message bundle="${loc}" key="registration.role.user" var="registration_role_user"/>
+<fmt:message bundle="${loc}" key="registration.admin.password" var="registration_role_admin_pass"/>
