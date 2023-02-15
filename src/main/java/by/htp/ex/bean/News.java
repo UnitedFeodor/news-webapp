@@ -1,21 +1,22 @@
 package by.htp.ex.bean;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class News implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final int DEFAULT_STATUS_DB = 1; // wip
 	
-	private Integer idNews = -1;
+	private int idNews = -1;
 	private String title = "";
 	private String brief = "";
 	private String content = "";
-	private Date newsDate = new Date(System.currentTimeMillis());
+	private LocalDate newsDate = LocalDate.now();
 
-	private Integer authorId = -1;
-	private Integer statusId = 1;
+	private int authorId = -1;
+	private int statusId = DEFAULT_STATUS_DB;
 
 
 
@@ -25,7 +26,7 @@ public class News implements Serializable {
 		this.idNews = idNews;
 	}
 
-	public News(int idNews, String title, String brief, String content, Date newsDate) {
+	public News(int idNews, String title, String brief, String content, LocalDate newsDate) {
 		super();
 		this.idNews = idNews;
 		this.title = title;
@@ -34,11 +35,21 @@ public class News implements Serializable {
 		this.newsDate = newsDate;
 	}
 
-	public Integer getIdNews() {
+	public News(News news) {
+		this.idNews = news.getIdNews();
+		this.title = news.getTitle();
+		this.brief = news.getBrief();
+		this.content = news.getContent();
+		this.newsDate = news.getNewsDate();
+		this.authorId = news.getAuthorId();
+		this.statusId = news.getStatusId();
+	}
+
+	public int getIdNews() {
 		return idNews;
 	}
 
-	public void setIdNews(Integer idNews) {
+	public void setIdNews(int idNews) {
 		this.idNews = idNews;
 	}
 
@@ -67,27 +78,27 @@ public class News implements Serializable {
 		
 	}
 
-	public Integer getAuthorId() {
+	public int getAuthorId() {
 		return authorId;
 	}
 
-	public void setAuthorId(Integer authorId) {
+	public void setAuthorId(int authorId) {
 		this.authorId = authorId;
 	}
 
-	public Integer getStatusId() {
+	public int getStatusId() {
 		return statusId;
 	}
 
-	public void setStatusId(Integer statusId) {
+	public void setStatusId(int statusId) {
 		this.statusId = statusId;
 	}
 
-	public Date getNewsDate() {
+	public LocalDate getNewsDate() {
 		return newsDate;
 	}
 
-	public void setNewsDate(Date newsDate) {
+	public void setNewsDate(LocalDate newsDate) {
 		this.newsDate = newsDate;
 	}
 
@@ -96,7 +107,7 @@ public class News implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		News news = (News) o;
-		return idNews.equals(news.idNews) && title.equals(news.title) && brief.equals(news.brief) && content.equals(news.content) && newsDate.equals(news.newsDate) && authorId.equals(news.authorId) && statusId.equals(news.statusId);
+		return idNews == news.idNews && authorId == news.authorId && statusId == news.statusId && title.equals(news.title) && brief.equals(news.brief) && content.equals(news.content) && newsDate.equals(news.newsDate);
 	}
 
 	@Override

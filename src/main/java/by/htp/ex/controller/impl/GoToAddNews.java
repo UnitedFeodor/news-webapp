@@ -2,10 +2,7 @@ package by.htp.ex.controller.impl;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.controller.Command;
-import by.htp.ex.constants.ViewConstants;
-import by.htp.ex.service.INewsService;
-import by.htp.ex.service.ServiceException;
-import by.htp.ex.service.ServiceProvider;
+import by.htp.ex.constants.JSPConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,25 +11,20 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-
 public class GoToAddNews implements Command {
-    private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
-        int id;
         try {
-            //id = newsService.list().size() + 1;
             News news = new News();
-            request.setAttribute(ViewConstants.NEWS, news);
-            request.setAttribute(ViewConstants.PRESENTATION, ViewConstants.ADD_NEWS);
-            request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
-        } catch (Exception e) { // TODO exact exception
+            request.setAttribute(JSPConstants.NEWS, news);
+            request.setAttribute(JSPConstants.PRESENTATION, JSPConstants.ADD_NEWS);
+            request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
+        } catch (Exception e) {
             HttpSession session = request.getSession(false);
-            session.setAttribute(ViewConstants.ERROR_MESSAGE,"cannot get the list of news");
-            response.sendRedirect("controller?command=go_to_error_page");
+            session.setAttribute(JSPConstants.ERROR_MESSAGE,"cannot get the add news page");
+            response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
         }
 
 

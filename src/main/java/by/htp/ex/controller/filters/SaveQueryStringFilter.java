@@ -2,11 +2,11 @@ package by.htp.ex.controller.filters;
 
 
 
+import by.htp.ex.constants.JSPConstants;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.HttpMethod;
-import org.apache.http.client.methods.HttpGet;
 
 import java.io.IOException;
 import java.util.Map;
@@ -29,15 +29,15 @@ public class SaveQueryStringFilter implements Filter {
 
             if (!paramsMap.isEmpty()) {
 
-                session.setAttribute("last_request_name", session.getAttribute("current_request_name"));
-                session.setAttribute("last_request_params", session.getAttribute("current_request_params"));
+                session.setAttribute(JSPConstants.LAST_REQUEST_NAME, session.getAttribute(JSPConstants.CURRENT_REQUEST_NAME));
+                session.setAttribute(JSPConstants.LAST_REQUEST_PARAMS, session.getAttribute(JSPConstants.CURRENT_REQUEST_PARAMS));
 
-                session.setAttribute("current_request_name", req.getRequestURL().toString());
-                session.setAttribute("current_request_params", paramsMap);
+                session.setAttribute(JSPConstants.CURRENT_REQUEST_NAME, req.getRequestURL().toString());
+                session.setAttribute(JSPConstants.CURRENT_REQUEST_PARAMS, paramsMap);
 
-                if (session.getAttribute("last_request_name") == null) {
-                    session.setAttribute("last_request_name", session.getAttribute("current_request_name"));
-                    session.setAttribute("last_request_params", session.getAttribute("current_request_params"));
+                if (session.getAttribute(JSPConstants.LAST_REQUEST_NAME) == null) {
+                    session.setAttribute(JSPConstants.LAST_REQUEST_NAME, session.getAttribute(JSPConstants.CURRENT_REQUEST_NAME));
+                    session.setAttribute(JSPConstants.LAST_REQUEST_PARAMS, session.getAttribute(JSPConstants.CURRENT_REQUEST_PARAMS));
                 }
             }
         }

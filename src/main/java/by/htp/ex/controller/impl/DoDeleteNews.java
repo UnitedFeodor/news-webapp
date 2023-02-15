@@ -2,7 +2,7 @@ package by.htp.ex.controller.impl;
 
 import by.htp.ex.controller.Command;
 import by.htp.ex.constants.NewsConstants;
-import by.htp.ex.constants.ViewConstants;
+import by.htp.ex.constants.JSPConstants;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
@@ -18,6 +18,8 @@ import java.io.IOException;
 public class DoDeleteNews implements Command {
 
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
+
+    private static final String JSP_DELETE_SUCCESS = "delete_success";
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -26,16 +28,16 @@ public class DoDeleteNews implements Command {
         if (newsIds != null) {
             try {
                 newsService.delete(newsIds);
-                session.setAttribute("delete_success","suc");
-                response.sendRedirect("controller?command=go_to_news_list");
+                session.setAttribute(JSP_DELETE_SUCCESS,JSPConstants.SUC);
+                response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_NEWS_LIST);
             } catch (ServiceException e) {
-                session.setAttribute(ViewConstants.ERROR_MESSAGE,"delete error");
-                response.sendRedirect("controller?command=go_to_error_page");
+                session.setAttribute(JSPConstants.ERROR_MESSAGE,"delete error");
+                response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
             }
 
         } else {
-            session.setAttribute(ViewConstants.ERROR_MESSAGE,"no news to delete selected");
-            response.sendRedirect("controller?command=go_to_error_page");
+            session.setAttribute(JSPConstants.ERROR_MESSAGE,"no news to delete selected");
+            response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
 
         }
 

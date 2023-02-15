@@ -23,6 +23,16 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
+	public User(User user) {
+		this.id = user.getId();
+		this.email = user.getEmail();
+		this.password = user.getPassword();
+		this.role = user.getRole();
+		this.name = user.getName();
+		this.surname = user.getSurname();
+		this.birthday = user.getBirthday();
+	}
+
 	private int id = -1;
 	private String email;
 	private String password;

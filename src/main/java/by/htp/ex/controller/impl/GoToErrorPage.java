@@ -1,7 +1,7 @@
 package by.htp.ex.controller.impl;
 
 import by.htp.ex.controller.Command;
-import by.htp.ex.constants.ViewConstants;
+import by.htp.ex.constants.JSPConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,13 +14,13 @@ public class GoToErrorPage implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        String errorMessage = (String) session.getAttribute(ViewConstants.ERROR_MESSAGE);
+        String errorMessage = (String) session.getAttribute(JSPConstants.ERROR_MESSAGE);
 
         if (errorMessage == null) {
 
-            session.setAttribute(ViewConstants.ERROR_MESSAGE,"no such command error");
+            session.setAttribute(JSPConstants.ERROR_MESSAGE,"no such command error");
         }
-        request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
+        request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
 
     }
 }

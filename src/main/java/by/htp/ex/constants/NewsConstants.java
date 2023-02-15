@@ -13,9 +13,5 @@ public final class NewsConstants {
     public static final String DATE_FORMAT = "dd/MM/yyyy";
 
 
-    public static final String DB_ID = "id";
-    public static final String DB_TITLE = "title";
-    public static final String DB_DATE = "date_added";
-    public static final String DB_BRIEF = "brief";
-    public static final String DB_CONTENT = "content";
+
 }

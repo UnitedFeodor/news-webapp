@@ -31,7 +31,7 @@ public class NewsServiceImpl implements INewsService{
 	@Override
 	public void add(News news) throws ServiceException {
 		try {
-			newsDAO.addNews(news); // TODO make a date check method in validation or in service?
+			newsDAO.addNews(news); // TODO make a date check method in validation
 		} catch (DaoException e) {
 			throw new ServiceException(e);
 		}
@@ -46,7 +46,6 @@ public class NewsServiceImpl implements INewsService{
 	@Override
 	public void update(News news)  throws ServiceException{
 		try {
-
 			newsDAO.updateNews(news);
 		} catch (DaoException e) {
 			throw new ServiceException(e);
@@ -56,7 +55,6 @@ public class NewsServiceImpl implements INewsService{
 
 	@Override
 	public List<News> latestList(int count) throws ServiceException {
-		
 		try {
 			return newsDAO.getLatestList(count);
 		} catch (DaoException e) {

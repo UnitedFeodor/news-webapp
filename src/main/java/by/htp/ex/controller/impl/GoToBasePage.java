@@ -5,7 +5,7 @@ import java.util.List;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.controller.Command;
-import by.htp.ex.constants.ViewConstants;
+import by.htp.ex.constants.JSPConstants;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
@@ -22,19 +22,19 @@ public class GoToBasePage implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//TODO make more param strings constants?
+
 		List<News> latestNews;
 		try {
 			latestNews = newsService.latestList(5);
 			if(latestNews.size() > 0) {
-				request.setAttribute(ViewConstants.NEWS, latestNews);
+				request.setAttribute(JSPConstants.NEWS, latestNews);
 
 			}
-			request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
+			request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
 		} catch (ServiceException e) {
 			HttpSession session = request.getSession(false);
-			session.setAttribute(ViewConstants.ERROR_MESSAGE,"cannot get the latest list of news");
-			response.sendRedirect("controller?command=go_to_error_page");
+			session.setAttribute(JSPConstants.ERROR_MESSAGE,"cannot get the latest list of news");
+			response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
 		}
 
 		

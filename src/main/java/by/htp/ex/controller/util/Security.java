@@ -1,4 +1,4 @@
-package by.htp.ex.controller.utilities;
+package by.htp.ex.controller.util;
 
 import by.htp.ex.controller.CommandName;
 import by.htp.ex.constants.UserConstants;

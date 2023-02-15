@@ -3,56 +3,72 @@ package by.htp.ex.dao.impl;
 import java.sql.*;
 
 import by.htp.ex.bean.User;
-import by.htp.ex.constants.UserConstants;
 import by.htp.ex.dao.DaoException;
 import by.htp.ex.dao.IUserDAO;
-import by.htp.ex.dao.connection_pool.ConnectionPool;
 import by.htp.ex.dao.connection_pool.ConnectionPoolException;
 import by.htp.ex.dao.connection_pool.ConnectionPoolProvider;
-import by.htp.ex.dao.connection_pool.DBConstants;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDAO implements IUserDAO	{
-	private static final int ROLE_ID_USER = 1;
-	private static final int ROLE_ID_ADMIN = 2;
-	private static final int ROLE_ID_GUEST = 3;
 
-	private static final int STATUS_ID_INACTIVE = 1;
-	private static final int STATUS_ID_ACTIVE = 2;
-	private static final int STATUS_ID_BLOCKED = 3;
+	public static final String DB_ID = "id";
+	public static final String DB_LOGIN = "login";
+	public static final String DB_PASSWORD = "password";
+
+	public static final String DB_ROLE_ID = "roles_id";
+	public static final String DB_STATUS_ID = "status_id";
+
+	public static final String DB_ROLES_TITLE = "title";
+
+	public static final int DB_ON_REGISTER_USER_STATUS_ID = 2; // 'active'
 
 	private static final String Q_GET_ALL_USERS = "SELECT * FROM users";
 	//private static final String Q_GET_USER_BY_LOGIN_AND_PASSWORD = "SELECT * FROM users WHERE login = ? AND password = ?";
 	private static final String Q_GET_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
 
+	private static final String Q_GET_ROLE_ID_BY_TITLE = "SELECT id FROM roles WHERE title = ?";
+
+	// UPDATE users SET status_id = 1 WHERE login = 't';
+	private static final String Q_UPDATE_USER_STATUS_ID_BY_LOGIN = "UPDATE users SET status_id = ? WHERE login = ?";
+	private static final String Q_UPDATE_USER_STATUS_ID_BY_USER_ID = "UPDATE users SET status_id = ? WHERE id = ?";
+	private static final String Q_GET_ROLE_ID_BY_TITLE_AND_STATUS_ID_BY_NAME = "SELECT roles.id,user_status.id FROM roles LEFT JOIN user_status ON user_status.status_name = ? WHERE roles.title = ? ";
+
+	private static final String Q_GET_USER_AND_ROLE_BY_LOGIN = "SELECT users.*, roles.title FROM users LEFT JOIN roles ON users.roles_id = roles.id WHERE login = ?";
 	private static final String Q_GET_ID_BY_LOGIN = "SELECT id FROM users WHERE login = ?";
 	private static final String Q_GET_ROLE_BY_ID = "SELECT * FROM roles WHERE id = ?";
 	private static final String Q_INSERT_USER = "INSERT INTO users (login,password,roles_id,status_id) VALUES (?,?,?,?)";
 
 	private static final String Q_INSERT_USER_DETAILS = "INSERT INTO user_details (users_id,name,surname,birthday) VALUES (?,?,?,?)";
 	@Override
-	public boolean logination(String login, String password) throws DaoException {
+	public boolean signIn(String login, String password) throws DaoException {
 
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
-			try(PreparedStatement statement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
-				statement.setString(1,login);
+			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
+				getUserStatement.setString(1,login);
 
-
-
-				//statement.setString(2,password);
-				try(ResultSet rs = statement.executeQuery()) {
-					if (rs.isBeforeFirst()) {
-						rs.next();
-						String hashedPassword = rs.getString(UserConstants.DB_PASSWORD);
-						return BCrypt.checkpw(password,hashedPassword);
-
-					} else {
+				try(ResultSet rs = getUserStatement.executeQuery()) {
+					if (!rs.isBeforeFirst()) {
 						return false; // no such login in db
 					}
+					rs.next();
+					String hashedPassword = rs.getString(DB_PASSWORD);
+					return BCrypt.checkpw(password,hashedPassword);
+
 				} catch (IllegalArgumentException e) {
 					return false;
 				}
 			}
+
+			/*
+			try(PreparedStatement updateUserStatement = connection.prepareStatement(Q_UPDATE_USER_STATUS_ID_BY_LOGIN)) {
+				updateUserStatement.setInt(1,DB_ON_LOGIN_USER_STATUS_ID);
+				updateUserStatement.setString(2,login);
+				int modifiedRows = updateUserStatement.executeUpdate();
+				if (modifiedRows != 1) {
+					throw new DaoException("error updating user data in the table");
+				}
+				return true;
+			}*/
 
 		} catch (SQLException e) {
 			throw new DaoException(e);
@@ -60,8 +76,9 @@ public class UserDAO implements IUserDAO	{
 			throw new DaoException(e);
 		}
 
-
 	}
+
+
 
 	@Override
 	public String getRole(String login, String password) throws DaoException {
@@ -84,8 +101,6 @@ public class UserDAO implements IUserDAO	{
 							return dbRole;
 
 						}
-
-
 					}
 				}
 			}
@@ -100,7 +115,7 @@ public class UserDAO implements IUserDAO	{
 	@Override
 	public User getUserByLogin(String login) throws DaoException {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
-			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
+			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_AND_ROLE_BY_LOGIN)) {
 				getUserStatement.setString(1,login);
 				try(ResultSet rs = getUserStatement.executeQuery()) {
 					User foundUser;
@@ -108,14 +123,12 @@ public class UserDAO implements IUserDAO	{
 						throw new DaoException("no user with such login found"); // no such login found in db
 					} else {
 						rs.next();
-						foundUser = new User(login,rs.getString(UserConstants.DB_PASSWORD));
-						foundUser.setId(rs.getInt(UserConstants.DB_ID));
-						String role = roleIdToRole(rs.getInt(UserConstants.DB_ROLE_ID)); // TODO ask: not very good to do this without db?
+						foundUser = new User(login,rs.getString(DB_PASSWORD));
+						foundUser.setId(rs.getInt(DB_ID));
+						String role = rs.getString(DB_ROLES_TITLE);
 						foundUser.setRole(role);
 
 						return foundUser;
-
-
 					}
 				}
 			}
@@ -166,6 +179,25 @@ public class UserDAO implements IUserDAO	{
 					}
 				}
 			}
+
+			int roleId;
+			try(PreparedStatement getRoleIdStatement = connection.prepareStatement(Q_GET_ROLE_ID_BY_TITLE)) {
+				//getRoleIdStatement.setString(2,DB_USER_ON_REGISTER_STATUS);
+				getRoleIdStatement.setString(1,user.getRole());
+				try(ResultSet rs = getRoleIdStatement.executeQuery()) {
+					if (!rs.isBeforeFirst()) { // such login found in db
+						throw new DaoException("error accessing roles table");
+					}
+					rs.next();
+					if (rs.getObject(1) == null ) {
+						throw new DaoException("no role with such title found in db");
+					}
+					roleId = rs.getInt(1);
+				}
+			}
+			// Q_GET_ROLE_ID_BY_TITLE
+
+
 			try(PreparedStatement insertUserStatement = connection.prepareStatement(Q_INSERT_USER,Statement.RETURN_GENERATED_KEYS)) {
 				insertUserStatement.setString(1,user.getEmail());
 
@@ -174,11 +206,11 @@ public class UserDAO implements IUserDAO	{
 				String hashedPassword = BCrypt.hashpw(password,salt);
 
 				insertUserStatement.setString(2,hashedPassword);
-				insertUserStatement.setInt(3,roleToRoleId(user.getRole()));
-				insertUserStatement.setInt(4,STATUS_ID_INACTIVE);
+				insertUserStatement.setInt(3,roleId);
+				insertUserStatement.setInt(4,DB_ON_REGISTER_USER_STATUS_ID);
 				int modifiedRows = insertUserStatement.executeUpdate();
 				if (modifiedRows != 1) {
-					throw new SQLException("error inserting user data into the table");
+					throw new DaoException("error inserting user data into the table");
 				}
 
 				try (ResultSet generatedKeys = insertUserStatement.getGeneratedKeys()) {
@@ -186,7 +218,7 @@ public class UserDAO implements IUserDAO	{
 						user.setId(generatedKeys.getInt(1));
 					}
 					else {
-						throw new SQLException("creating user failed, no ID obtained");
+						throw new DaoException("creating user failed, no ID obtained");
 					}
 					try(PreparedStatement insertDetailsStatement = connection.prepareStatement(Q_INSERT_USER_DETAILS)) {
 						insertDetailsStatement.setLong(1,user.getId());
@@ -214,42 +246,8 @@ public class UserDAO implements IUserDAO	{
 
 	}
 
-	private int roleToRoleId(String role) throws DaoException {
-		switch (role) {
-			case UserConstants.ROLE_USER -> {
-				return ROLE_ID_USER;
-			}
-			case UserConstants.ROLE_ADMIN -> {
-				return ROLE_ID_ADMIN;
-			}
-			case UserConstants.ROLE_GUEST -> {
-				return ROLE_ID_GUEST;
-			}
-			default -> {
-				throw new DaoException("role doesn't exist"); // maybe exception
-			}
 
-		}
 
-	}
 
-	private String roleIdToRole(int roleId) throws DaoException {
-		switch (roleId) {
-			case ROLE_ID_USER -> {
-				return UserConstants.ROLE_USER;
-			}
-			case ROLE_ID_ADMIN -> {
-				return UserConstants.ROLE_ADMIN;
-			}
-			case ROLE_ID_GUEST -> {
-				return UserConstants.ROLE_GUEST;
-			}
-			default -> {
-				throw new DaoException("role with such id doesn't exist"); // maybe exception
-			}
-
-		}
-
-	}
 
 }

@@ -3,7 +3,7 @@ package by.htp.ex.controller;
 import java.io.IOException;
 import java.io.Serial;
 
-import by.htp.ex.constants.ViewConstants;
+import by.htp.ex.constants.JSPConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ public class FrontController extends HttpServlet {
 	}
 
 	private void parseAndExecuteCommand(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String commandName = request.getParameter(ViewConstants.COMMAND);
+		String commandName = request.getParameter(JSPConstants.COMMAND);
 
 		Command command = provider.getCommand(commandName);
 		command.execute(request, response);

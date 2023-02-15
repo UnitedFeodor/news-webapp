@@ -1,12 +1,13 @@
 package by.htp.ex.controller.impl;
 
 import by.htp.ex.controller.Command;
-import by.htp.ex.constants.ViewConstants;
-import by.htp.ex.controller.utilities.Usability;
+import by.htp.ex.constants.JSPConstants;
+import by.htp.ex.controller.util.RequestHelper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang.NullArgumentException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -14,25 +15,30 @@ import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class DoChangeLanguage implements Command {
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        session.setAttribute("local", request.getParameter("local"));
+        session.setAttribute(JSPConstants.LOCALE, request.getParameter(JSPConstants.LOCALE));
 
         try {
 
-            String lastRequestName = (String) session.getAttribute("last_request_name");
-            Map<String, String[]> paramsMap = (Map<String, String[]>) session.getAttribute("last_request_params");
-            String lastRequest = Usability.getRequest(lastRequestName,paramsMap);
-            if(lastRequest == null) {
-                session.setAttribute( ViewConstants.ERROR_MESSAGE,"error getting last request");
-                response.sendRedirect("controller?command=go_to_error_page");
-            } else {
-                response.sendRedirect(lastRequest);
+            String lastRequestName = (String) session.getAttribute(JSPConstants.LAST_REQUEST_NAME);
+            if (lastRequestName == null ) {
+                throw new NullArgumentException("invalid request parameters");
             }
-        } catch (Exception e) {
-            session.setAttribute( ViewConstants.ERROR_MESSAGE,"error getting last request");
-            response.sendRedirect("controller?command=go_to_error_page");
+
+            Map<String, String[]> paramsMap = (Map<String, String[]>) session.getAttribute(JSPConstants.LAST_REQUEST_PARAMS);
+            if (paramsMap == null ) {
+                throw new NullArgumentException("invalid request parameters");
+            }
+
+            String lastRequest = RequestHelper.formRequestURL(lastRequestName,paramsMap);
+            response.sendRedirect(lastRequest);
+
+        } catch (NullArgumentException e) {
+            session.setAttribute( JSPConstants.ERROR_MESSAGE,"error getting last request");
+            response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
         }
     }
 }

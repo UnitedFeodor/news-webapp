@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import by.htp.ex.bean.User;
 import by.htp.ex.constants.UserConstants;
 import by.htp.ex.controller.Command;
-import by.htp.ex.constants.ViewConstants;
+import by.htp.ex.constants.JSPConstants;
 import by.htp.ex.service.IUserService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
@@ -29,6 +29,9 @@ public class DoRegistration implements Command {
 	private static final String JSP_BIRTHDAY_PARAM = "birthday";
 
 	private static final String JSP_ROLE_PARAM = "roles";
+
+	private static final String JSP_REGISTER_ERROR = "register_error";
+	private static final String JSP_REGISTER_SUCCESS = "register_success";
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -45,21 +48,22 @@ public class DoRegistration implements Command {
 			newUser.setName(name);
 			newUser.setSurname(surname);
 			String birthday = request.getParameter(JSP_BIRTHDAY_PARAM);
+
+			// if the user provided input for birthday then parse and save it
 			if(birthday != null && !birthday.equals("")) {
-				newUser.setBirthday(LocalDate.parse(birthday, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+				newUser.setBirthday(LocalDate.parse(birthday, DateTimeFormatter.ofPattern(UserConstants.DATE_FORMAT)));
 			}
+
 			if (!service.register(newUser)) {
-
-				session.setAttribute("register_error","err");
+				session.setAttribute(JSP_REGISTER_ERROR, JSPConstants.ERR);
 			} else {
-
-				//session.setAttribute(UserConstants.USER_ID,service.getId(request.getParameter(JSP_LOGIN_PARAM)));
-				session.setAttribute("register_success", "suc");
+				session.setAttribute(JSP_REGISTER_SUCCESS, JSPConstants.SUC);
 			}
-			response.sendRedirect("controller?command=go_to_base_page");
+
+			response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_BASE_PAGE);
 		} catch (ServiceException e) {
-			session.setAttribute(ViewConstants.ERROR_MESSAGE,"register error");
-			response.sendRedirect("controller?command=go_to_error_page");
+			session.setAttribute(JSPConstants.ERROR_MESSAGE,"register error");
+			response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
 		}
 
 	}

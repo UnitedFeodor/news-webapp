@@ -5,7 +5,7 @@ import java.util.List;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.controller.Command;
-import by.htp.ex.constants.ViewConstants;
+import by.htp.ex.constants.JSPConstants;
 import by.htp.ex.service.INewsService;
 import by.htp.ex.service.ServiceException;
 import by.htp.ex.service.ServiceProvider;
@@ -19,22 +19,22 @@ import jakarta.servlet.http.HttpSession;
 public class GoToNewsList implements Command {
 	
 	private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
-	
+	// TODO Md-JD2-94-22_Смолякова Ольга_Технологии разработки энтерпрайз-реш. на Java_19 Вебинар_08.02.2023 pagination
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<News> newsList;
 		try {
 			newsList = newsService.list();
 			if (newsList.size() > 0) {
-				request.setAttribute(ViewConstants.NEWS, newsList);
+				request.setAttribute(JSPConstants.NEWS, newsList);
 			}
-			request.setAttribute(ViewConstants.PRESENTATION, ViewConstants.NEWS_LIST);
+			request.setAttribute(JSPConstants.PRESENTATION, JSPConstants.NEWS_LIST);
 
-			request.getRequestDispatcher("WEB-INF/pages/layouts/baseLayout.jsp").forward(request, response);
+			request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
 		} catch (ServiceException e) {
 			HttpSession session = request.getSession(false);
-			session.setAttribute(ViewConstants.ERROR_MESSAGE,"cannot get the list of news");
-			response.sendRedirect("controller?command=go_to_error_page");
+			session.setAttribute(JSPConstants.ERROR_MESSAGE,"cannot get the list of news");
+			response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
 		}
 		
 	}

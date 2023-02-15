@@ -2,8 +2,8 @@ package by.htp.ex.controller.filters;
 
 import by.htp.ex.controller.CommandName;
 import by.htp.ex.constants.UserConstants;
-import by.htp.ex.constants.ViewConstants;
-import by.htp.ex.controller.utilities.Security;
+import by.htp.ex.constants.JSPConstants;
+import by.htp.ex.controller.util.Security;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
@@ -33,9 +33,9 @@ public class SecurityRoleFilter implements Filter {
 
         HttpSession session = ((HttpServletRequest) request).getSession(false);
 
-        String commandNameStr = request.getParameter(ViewConstants.COMMAND);
+        String commandNameStr = request.getParameter(JSPConstants.COMMAND);
         if (commandNameStr == null) {
-            session.setAttribute(ViewConstants.ERROR_MESSAGE,"no command passed in request");
+            session.setAttribute(JSPConstants.ERROR_MESSAGE,"no command passed in request");
             chain.doFilter(filteredRequest,response);
 
         } else {
@@ -46,11 +46,11 @@ public class SecurityRoleFilter implements Filter {
                     chain.doFilter(request,response);
 
                 } else {
-                    session.setAttribute(ViewConstants.ERROR_MESSAGE,"cannot do this request for this role");
+                    session.setAttribute(JSPConstants.ERROR_MESSAGE,"cannot do this request for this role");
                     chain.doFilter(filteredRequest,response);
                 }
             } catch (IllegalArgumentException e) {
-                session.setAttribute(ViewConstants.ERROR_MESSAGE,"invalid command passed in request");
+                session.setAttribute(JSPConstants.ERROR_MESSAGE,"invalid command passed in request");
                 chain.doFilter(filteredRequest,response);
             }
 
