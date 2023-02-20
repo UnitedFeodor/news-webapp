@@ -36,6 +36,6 @@ public class FrontController extends HttpServlet {
 		command.execute(request, response);
 	}
 
-	// TODO instead of error page every time, do the last request again and show a message?
+	// TODO instead of error page every time, do the last request again and show a message
 
 }

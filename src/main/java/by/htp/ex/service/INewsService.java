@@ -6,7 +6,7 @@ import by.htp.ex.bean.News;
 
 public interface INewsService {
 
-  void delete(String[] newsIds) throws ServiceException;
+  void delete(int[] newsIds) throws ServiceException;
   void add(News news) throws ServiceException;
 
   void find() throws ServiceException;

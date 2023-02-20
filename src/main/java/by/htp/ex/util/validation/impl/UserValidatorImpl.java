@@ -59,7 +59,8 @@ public class UserValidatorImpl implements IUserValidator {
 		String email = user.getEmail();
 		if (email == null || email.isEmpty()) {
 			errors.add(LOGIN_ERR);
-		}  /*else { //TODO uncomment for proper validation
+			//TODO uncomment for proper validation
+		}  /*else {
 			Pattern pattern = Pattern.compile(EMAIL_LENIENT_REGEX);
 			Matcher matcher = pattern.matcher(email);
 			if (!matcher.matches()) {

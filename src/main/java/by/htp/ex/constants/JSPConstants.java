@@ -4,12 +4,15 @@ public final class JSPConstants {
 
     private JSPConstants(){}
 
+
     public static final String LOCALE = "local";
     public static final String LAST_REQUEST_NAME = "last_request_name";
     public static final String LAST_REQUEST_PARAMS = "last_request_params";
-
     public static final String CURRENT_REQUEST_NAME = "current_request_name";
     public static final String CURRENT_REQUEST_PARAMS = "current_request_params";
+
+    public static final String JSP_SAVE_SUCCESS = "save_success";
+
     public static final String ERR = "err";
     public static final String SUC = "suc";
 

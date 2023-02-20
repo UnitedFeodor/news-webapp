@@ -4,6 +4,9 @@ import java.sql.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.dao.DaoException;
@@ -28,11 +31,19 @@ public class NewsDAO implements INewsDAO {
 	private static final String Q_GET_NEWS_BY_ID = "SELECT * FROM news WHERE id = ?";
 	private static final String Q_GET_ALL_NEWS_BY_DATE_DESC = "SELECT * FROM news ORDER BY date_added DESC";
 
+	private ReadWriteLock lock = new ReentrantReadWriteLock();
+	private Lock writeLock = lock.writeLock();
+	private Lock readLock = lock.readLock();
+
+	//private Semaphore sem = new Semaphore(1);
+
 	@Override
 	public List<News> getLatestList(int count) throws DaoException {
-		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
-			PreparedStatement statement = connection.prepareStatement(Q_GET_ALL_NEWS_BY_DATE_DESC);
-			ResultSet rs = statement.executeQuery()) {
+		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
+				PreparedStatement statement = connection.prepareStatement(Q_GET_ALL_NEWS_BY_DATE_DESC);
+				ResultSet rs = statement.executeQuery()) {
+
+			readLock.lock();
 
 			List<News> newsList = new ArrayList<>();
 			while (rs.next()) {
@@ -47,10 +58,10 @@ public class NewsDAO implements INewsDAO {
 			}
 			return newsList;
 
-		} catch (SQLException e) {
+		} catch (SQLException | ConnectionPoolException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			readLock.unlock();
 		}
 	}
 
@@ -60,6 +71,8 @@ public class NewsDAO implements INewsDAO {
 			 	PreparedStatement statement = connection.prepareStatement(Q_GET_ALL_NEWS);
 			 	ResultSet rs = statement.executeQuery()) {
 
+			readLock.lock();
+
 			List<News> newsList = new ArrayList<>();
 			while (rs.next()) {
 				News currNews = new News();
@@ -72,22 +85,25 @@ public class NewsDAO implements INewsDAO {
 			}
 			return newsList;
 
-		} catch (SQLException e) {
+		} catch (SQLException | ConnectionPoolException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			readLock.unlock();
 		}
 	}
 	@Override
 	public News fetchById(int id) throws DaoException {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			PreparedStatement statement = connection.prepareStatement(Q_GET_NEWS_BY_ID)) {
+
+			readLock.lock();
+
 			statement.setInt(1,id);
 			try (ResultSet rs = statement.executeQuery()) {
 				if(!rs.isBeforeFirst()) {
 					throw new DaoException("no news with such id in db");
 				}
-				//List<News> newsList = new ArrayList<>();
+
 				rs.next();
 				News newsFound = new News(id);
 				newsFound.setTitle(rs.getString(DB_TITLE));
@@ -100,10 +116,10 @@ public class NewsDAO implements INewsDAO {
 				throw new DaoException(ex);
 			}
 
-		} catch (SQLException e) {
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			readLock.unlock();
 		}
 	}
 
@@ -111,6 +127,9 @@ public class NewsDAO implements INewsDAO {
 	public int addNews(News news) throws DaoException {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			PreparedStatement statement = connection.prepareStatement(Q_INSERT_NEWS)) {
+
+			writeLock.lock();
+
 			statement.setString(1,news.getTitle());
 			statement.setDate(2,Date.valueOf(news.getNewsDate()));
 			statement.setString(3,news.getBrief());
@@ -124,10 +143,10 @@ public class NewsDAO implements INewsDAO {
 			}
 			return 0;
 
-		} catch (SQLException e) {
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			writeLock.unlock();
 		}
 	}
 
@@ -135,6 +154,9 @@ public class NewsDAO implements INewsDAO {
 	public void updateNews(News news) throws DaoException {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			PreparedStatement statement = connection.prepareStatement(Q_UPDATE_NEWS_BY_ID)) {
+
+			writeLock.lock();
+
 			statement.setString(1,news.getTitle());
 			statement.setString(2,news.getBrief());
 			statement.setString(3,news.getContent());
@@ -146,36 +168,41 @@ public class NewsDAO implements INewsDAO {
 				throw new DaoException("error updating news in db");
 			}
 
-		} catch (SQLException e) {
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
-		};
+		} finally {
+			writeLock.unlock();
+		}
 
 	}
 
 	@Override
-	public void deleteNews(String[] idNews) throws DaoException {
-		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
-			PreparedStatement statement = connection.prepareStatement(Q_DELETE_IDS)) {
-			for(String id : idNews) {
-				int currId = Integer.parseInt(id);
+	public void deleteNews(int[] newsIds) throws DaoException {
+		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
+			 PreparedStatement statement = connection.prepareStatement(Q_DELETE_IDS)) {
+
+			writeLock.lock();
+			//sem.acquire();
+
+			for(int currId : newsIds) {
 				statement.setInt(1,currId);
 				statement.addBatch();
 			}
 
 			int[] affectedRecords = statement.executeBatch();
-			for (int i = 0; i < affectedRecords.length; i++) {
-				if (affectedRecords[i] != 1) {
+			for (int affectedRecord : affectedRecords) {
+				if (affectedRecord != 1) {
 					throw new DaoException("error deleting news from db");
 				}
 			}
 
-		} catch (SQLException e) {
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
-		};
+		} finally {
+			writeLock.unlock();
+			//sem.release();
+		}
+
 
 
 	}

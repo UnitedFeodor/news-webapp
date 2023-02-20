@@ -37,7 +37,7 @@ public class DoChangeLanguage implements Command {
             response.sendRedirect(lastRequest);
 
         } catch (NullArgumentException e) {
-            session.setAttribute( JSPConstants.ERROR_MESSAGE,"error getting last request");
+            session.setAttribute(JSPConstants.ERROR_MESSAGE,"error getting last request");
             response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
         }
     }

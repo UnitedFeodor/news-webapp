@@ -17,12 +17,9 @@ import java.io.IOException;
 
 
 public class GoToEditNews implements Command {
-
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
-
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         try {
             String id = request.getParameter(NewsConstants.NEWS_ID);
             News news = newsService.findById(Integer.parseInt(id));
@@ -30,6 +27,7 @@ public class GoToEditNews implements Command {
             request.setAttribute(JSPConstants.PRESENTATION, JSPConstants.EDIT_NEWS);
 
             request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
+
         } catch (ServiceException e) {
             HttpSession session = request.getSession(false);
             session.setAttribute(JSPConstants.ERROR_MESSAGE, "cannot find the news by id");

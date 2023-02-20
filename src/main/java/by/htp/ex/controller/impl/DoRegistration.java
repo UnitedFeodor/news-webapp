@@ -23,13 +23,10 @@ public class DoRegistration implements Command {
 
 	private static final String JSP_LOGIN_PARAM = "login";
 	private static final String JSP_PASSWORD_PARAM = "password";
-
 	private static final String JSP_NAME_PARAM = "name";
 	private static final String JSP_SURNAME_PARAM = "surname";
 	private static final String JSP_BIRTHDAY_PARAM = "birthday";
-
 	private static final String JSP_ROLE_PARAM = "roles";
-
 	private static final String JSP_REGISTER_ERROR = "register_error";
 	private static final String JSP_REGISTER_SUCCESS = "register_success";
 	@Override

@@ -18,7 +18,11 @@ public class GoToErrorPage implements Command {
 
         if (errorMessage == null) {
 
-            session.setAttribute(JSPConstants.ERROR_MESSAGE,"no such command error");
+            if (request.getPathInfo().contains(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE)) {
+                session.setAttribute(JSPConstants.ERROR_MESSAGE,"jsp loading error");
+            } else {
+                session.setAttribute(JSPConstants.ERROR_MESSAGE,"no such command error");
+            }
         }
         request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
 

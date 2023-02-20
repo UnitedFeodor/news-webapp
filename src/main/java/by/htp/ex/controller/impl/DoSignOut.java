@@ -1,17 +1,14 @@
 package by.htp.ex.controller.impl;
 
-import java.io.IOException;
-
 import by.htp.ex.constants.JSPConstants;
-import by.htp.ex.controller.Command;
 import by.htp.ex.constants.UserConstants;
-import by.htp.ex.service.IUserService;
-import by.htp.ex.service.ServiceException;
-import by.htp.ex.service.ServiceProvider;
+import by.htp.ex.controller.Command;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
 
 public class DoSignOut implements Command {
 

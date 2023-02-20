@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpSession;
 public class GoToNewsList implements Command {
 	
 	private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
-	// TODO Md-JD2-94-22_Смолякова Ольга_Технологии разработки энтерпрайз-реш. на Java_19 Вебинар_08.02.2023 pagination
+	// TODO watch Java_19 Вебинар_08.02.2023 for pagination ideas
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<News> newsList;
@@ -31,6 +31,7 @@ public class GoToNewsList implements Command {
 			request.setAttribute(JSPConstants.PRESENTATION, JSPConstants.NEWS_LIST);
 
 			request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
+
 		} catch (ServiceException e) {
 			HttpSession session = request.getSession(false);
 			session.setAttribute(JSPConstants.ERROR_MESSAGE,"cannot get the list of news");

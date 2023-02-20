@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="/WEB-INF/pages/tiles/localization/localizationBase.jsp" %>
+
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <div class="body-title">
 	<a href="controller?command=go_to_news_list">${goback_news} </a> ${addnews_goback_current}
 </div>
@@ -19,7 +21,7 @@
                 <td class="space_around_title_text">${date}</td>
 
                 <td class="space_around_view_text"><div class="word-breaker">
-                         <input type="text" name="news_date" value="<fmt:formatDate value="${news.newsDate}" pattern="dd/MM/yyyy" />"/>
+                         <input type="text" name="news_date" value="<tags:localDate date="${news.newsDate}"/>"/>
 
                     </div></td>
             </tr>

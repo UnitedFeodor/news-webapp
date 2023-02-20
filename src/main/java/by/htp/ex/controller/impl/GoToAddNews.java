@@ -20,7 +20,9 @@ public class GoToAddNews implements Command {
             News news = new News();
             request.setAttribute(JSPConstants.NEWS, news);
             request.setAttribute(JSPConstants.PRESENTATION, JSPConstants.ADD_NEWS);
+
             request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
+
         } catch (Exception e) {
             HttpSession session = request.getSession(false);
             session.setAttribute(JSPConstants.ERROR_MESSAGE,"cannot get the add news page");

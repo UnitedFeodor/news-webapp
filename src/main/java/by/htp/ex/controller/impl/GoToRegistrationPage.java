@@ -7,7 +7,6 @@ import by.htp.ex.constants.JSPConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 
 public class GoToRegistrationPage implements Command {

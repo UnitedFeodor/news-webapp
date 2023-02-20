@@ -22,14 +22,13 @@ public class GoToBasePage implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		List<News> latestNews;
 		try {
 			latestNews = newsService.latestList(5);
 			if(latestNews.size() > 0) {
 				request.setAttribute(JSPConstants.NEWS, latestNews);
-
 			}
+
 			request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
 		} catch (ServiceException e) {
 			HttpSession session = request.getSession(false);

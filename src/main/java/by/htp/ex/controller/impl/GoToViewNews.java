@@ -29,8 +29,8 @@ public class GoToViewNews implements Command {
 			request.setAttribute(JSPConstants.PRESENTATION, JSPConstants.VIEW_NEWS);
 
 			request.getRequestDispatcher(JSPConstants.BASE_LAYOUT_JSP_URI).forward(request, response);
-		} catch (ServiceException e) {
 
+		} catch (ServiceException e) {
 			HttpSession session = request.getSession(false);
 			session.setAttribute(JSPConstants.ERROR_MESSAGE,"cannot find the news by id");
 			response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);

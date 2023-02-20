@@ -1,6 +1,9 @@
 package by.htp.ex.dao.impl;
 
 import java.sql.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import by.htp.ex.bean.User;
 import by.htp.ex.dao.DaoException;
@@ -39,41 +42,38 @@ public class UserDAO implements IUserDAO	{
 	private static final String Q_INSERT_USER = "INSERT INTO users (login,password,roles_id,status_id) VALUES (?,?,?,?)";
 
 	private static final String Q_INSERT_USER_DETAILS = "INSERT INTO user_details (users_id,name,surname,birthday) VALUES (?,?,?,?)";
+
+	//private Semaphore sem = new Semaphore(1);
+	private ReadWriteLock lock = new ReentrantReadWriteLock();
+	private Lock writeLock = lock.writeLock();
+	private Lock readLock = lock.readLock();
+
 	@Override
 	public boolean signIn(String login, String password) throws DaoException {
+		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
+			 PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
 
-		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
-			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
-				getUserStatement.setString(1,login);
+			readLock.lock();
 
-				try(ResultSet rs = getUserStatement.executeQuery()) {
-					if (!rs.isBeforeFirst()) {
-						return false; // no such login in db
-					}
-					rs.next();
-					String hashedPassword = rs.getString(DB_PASSWORD);
-					return BCrypt.checkpw(password,hashedPassword);
+			getUserStatement.setString(1,login);
 
-				} catch (IllegalArgumentException e) {
-					return false;
+			try(ResultSet rs = getUserStatement.executeQuery()) {
+				if (!rs.isBeforeFirst()) {
+					return false; // no such login in db
 				}
+				rs.next();
+				String hashedPassword = rs.getString(DB_PASSWORD);
+				return BCrypt.checkpw(password,hashedPassword);
+
+			} catch (IllegalArgumentException e) {
+				return false;
 			}
 
-			/*
-			try(PreparedStatement updateUserStatement = connection.prepareStatement(Q_UPDATE_USER_STATUS_ID_BY_LOGIN)) {
-				updateUserStatement.setInt(1,DB_ON_LOGIN_USER_STATUS_ID);
-				updateUserStatement.setString(2,login);
-				int modifiedRows = updateUserStatement.executeUpdate();
-				if (modifiedRows != 1) {
-					throw new DaoException("error updating user data in the table");
-				}
-				return true;
-			}*/
 
-		} catch (SQLException e) {
+		} catch (SQLException | ConnectionPoolException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			readLock.unlock();
 		}
 
 	}
@@ -82,99 +82,103 @@ public class UserDAO implements IUserDAO	{
 
 	@Override
 	public String getRole(String login, String password) throws DaoException {
+		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
+			 PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
 
-		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
-			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
-				getUserStatement.setString(1,login);
-				try(ResultSet rs = getUserStatement.executeQuery()) {
-					User foundUser;
-					if (!rs.isBeforeFirst() ) {
-						throw new DaoException("no user with such login found"); // no such login found in db
-					} else {
-						rs.next();
-						int role_id = rs.getInt(4);
-						try(PreparedStatement getRoleStatement = connection.prepareStatement(Q_GET_ROLE_BY_ID);) {
-							getRoleStatement.setInt(1,role_id);
-							ResultSet rs2 = getRoleStatement.executeQuery();
-							rs2.next();
-							String dbRole = rs2.getString("title");
-							return dbRole;
+			readLock.lock();
 
-						}
+			getUserStatement.setString(1,login);
+			try(ResultSet rs = getUserStatement.executeQuery()) {
+				if (!rs.isBeforeFirst() ) {
+					throw new DaoException("no user with such login found"); // no such login found in db
+				} else {
+					rs.next();
+					int role_id = rs.getInt(4);
+					try(PreparedStatement getRoleStatement = connection.prepareStatement(Q_GET_ROLE_BY_ID)) {
+						getRoleStatement.setInt(1,role_id);
+						ResultSet rs2 = getRoleStatement.executeQuery();
+						rs2.next();
+						return rs2.getString(DB_ROLES_TITLE);
+
 					}
 				}
 			}
-
-		} catch (SQLException e) {
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			readLock.unlock();
 		}
 	}
 
 	@Override
 	public User getUserByLogin(String login) throws DaoException {
-		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
-			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_AND_ROLE_BY_LOGIN)) {
-				getUserStatement.setString(1,login);
-				try(ResultSet rs = getUserStatement.executeQuery()) {
-					User foundUser;
-					if (!rs.isBeforeFirst() ) {
-						throw new DaoException("no user with such login found"); // no such login found in db
-					} else {
-						rs.next();
-						foundUser = new User(login,rs.getString(DB_PASSWORD));
-						foundUser.setId(rs.getInt(DB_ID));
-						String role = rs.getString(DB_ROLES_TITLE);
-						foundUser.setRole(role);
+		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
+			 PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_AND_ROLE_BY_LOGIN)) {
 
-						return foundUser;
-					}
+			readLock.lock();
+			getUserStatement.setString(1,login);
+			try(ResultSet rs = getUserStatement.executeQuery()) {
+				User foundUser;
+				if (!rs.isBeforeFirst() ) {
+					throw new DaoException("no user with such login found"); // no such login found in db
+				} else {
+					rs.next();
+					foundUser = new User(login,rs.getString(DB_PASSWORD));
+					foundUser.setId(rs.getInt(DB_ID));
+					String role = rs.getString(DB_ROLES_TITLE);
+					foundUser.setRole(role);
+
+					return foundUser;
 				}
 			}
 
-		} catch (SQLException e) {
+
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			readLock.unlock();
 		}
 	}
 
 	@Override
 	public int getIdByLogin(String login) throws DaoException {
-		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
-			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
-				getUserStatement.setString(1,login);
-				try(ResultSet rs = getUserStatement.executeQuery()) {
-					User foundUser;
-					if (!rs.isBeforeFirst() ) {
-						throw new DaoException("no user with such login found"); // no such login found in db
-					} else {
-						rs.next();
+		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
+			 PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
 
-						return rs.getInt(1);
-					}
+			readLock.lock();
+
+			getUserStatement.setString(1,login);
+			try(ResultSet rs = getUserStatement.executeQuery()) {
+				if (!rs.isBeforeFirst() ) {
+					throw new DaoException("no user with such login found"); // no such login found in db
+				} else {
+					rs.next();
+
+					return rs.getInt(1);
 				}
 			}
 
-		} catch (SQLException e) {
+
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			readLock.unlock();
 		}
 	}
 
 	@Override
-	/**
-	 *
-	 *  user param is affected
-	 */
 	public boolean registration(User user) throws DaoException  {
-		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
+		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection()) {
+
+			connection.setAutoCommit(false);
+
+			//sem.acquire();
+			writeLock.lock();
+
 			try(PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
 				getUserStatement.setString(1,user.getEmail());
 				try(ResultSet rs = getUserStatement.executeQuery()) {
-					if (rs.isBeforeFirst() ) { // such login found in db
+					if (rs.isBeforeFirst() ) { // such login already found in db
 						return false;
 					}
 				}
@@ -184,6 +188,7 @@ public class UserDAO implements IUserDAO	{
 			try(PreparedStatement getRoleIdStatement = connection.prepareStatement(Q_GET_ROLE_ID_BY_TITLE)) {
 				//getRoleIdStatement.setString(2,DB_USER_ON_REGISTER_STATUS);
 				getRoleIdStatement.setString(1,user.getRole());
+
 				try(ResultSet rs = getRoleIdStatement.executeQuery()) {
 					if (!rs.isBeforeFirst()) { // such login found in db
 						throw new DaoException("error accessing roles table");
@@ -195,10 +200,8 @@ public class UserDAO implements IUserDAO	{
 					roleId = rs.getInt(1);
 				}
 			}
-			// Q_GET_ROLE_ID_BY_TITLE
 
-
-			try(PreparedStatement insertUserStatement = connection.prepareStatement(Q_INSERT_USER,Statement.RETURN_GENERATED_KEYS)) {
+			try (PreparedStatement insertUserStatement = connection.prepareStatement(Q_INSERT_USER,Statement.RETURN_GENERATED_KEYS)) {
 				insertUserStatement.setString(1,user.getEmail());
 
 				String password = user.getPassword();
@@ -231,17 +234,28 @@ public class UserDAO implements IUserDAO	{
 						}
 						modifiedRows = insertDetailsStatement.executeUpdate();
 						if (modifiedRows != 1) {
-							throw new SQLException("error inserting user details data into the table");
+							throw new DaoException("error inserting user details data into the table");
 						}
 					}
 				}
+
+				connection.commit();
+
 				return true;
+			} catch (DaoException e) {
+				connection.rollback();
+				throw new DaoException(e);
+			} finally {
+				connection.setAutoCommit(true);
 			}
 
-		} catch (SQLException e) {
+
+
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} catch (ConnectionPoolException e) {
-			throw new DaoException(e);
+		} finally {
+			//sem.release();
+			writeLock.unlock();
 		}
 
 	}

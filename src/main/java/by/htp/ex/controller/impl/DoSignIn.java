@@ -17,15 +17,14 @@ import jakarta.servlet.http.HttpSession;
 public class DoSignIn implements Command {
 
 	private final IUserService service = ServiceProvider.getInstance().getUserService();
-
 	private static final String JSP_LOGIN_PARAM = "login";
 	private static final String JSP_PASSWORD_PARAM = "password";
-
 	private static final String JSP_AUTHENTICATION_ERROR = "auth_error";
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false);// TODO add user cabinet to change details and see them
+
+		HttpSession session = request.getSession(false);	// TODO add user cabinet to change details and see them
 		try {
 			String login;
 			String password;
@@ -38,6 +37,7 @@ public class DoSignIn implements Command {
 				session.setAttribute(UserConstants.USER_ACTIVITY, UserConstants.USER_STATUS_ACTIVE);
 				session.setAttribute(UserConstants.USER_ROLE, user.getRole());
 				session.setAttribute(UserConstants.USER_ID,user.getId());
+
 				response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_NEWS_LIST);
 			} else {
 				session.setAttribute(UserConstants.USER_ACTIVITY, UserConstants.USER_STATUS_NOT_ACTIVE);
@@ -47,7 +47,6 @@ public class DoSignIn implements Command {
 			}
 
 		} catch (ServiceException e) {
-
 			session.setAttribute(JSPConstants.ERROR_MESSAGE, "sign in error");
 			response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_ERROR_PAGE);
 		}

@@ -1,6 +1,5 @@
 package by.htp.ex.dao.connection_pool;
 import java.sql.*;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -16,11 +15,12 @@ public class ConnectionPool {
     private String password;
     private int poolSize;
 
+    private volatile static boolean closingConnectionQueue = false;
+
     public ConnectionPool() {
         this.driverName = (DBConstants.DB_DRIVER);
         this.url = (DBConstants.DB_URL);
         this.user = DBConstants.DB_USER;
-        ;
         this.password = (DBConstants.DB_PASSWORD);
         this.poolSize = (DBConstants.DB_POLL_SIZE);
 
@@ -37,6 +37,8 @@ public class ConnectionPool {
                         user,
                         password);
 
+                //
+
                 PooledConnection pooledConnection = new PooledConnection(connection);
                 connectionQueue.add(pooledConnection);
 
@@ -50,10 +52,14 @@ public class ConnectionPool {
         }
     }
     public void dispose() {
+        closingConnectionQueue = true;
         clearConnectionQueue();
     }
     private void clearConnectionQueue() {
         try { // TODO local queue to isolate disposing connections with
+            /*BlockingQueue<Connection> localQueue = new ArrayBlockingQueue<>(poolSize);
+            localQueue.addAll(givenAwayConQueue);
+            localQueue.addAll(connectionQueue);*/
             closeConnectionsQueue(givenAwayConQueue);
             closeConnectionsQueue(connectionQueue);
         } catch (SQLException e) {
@@ -62,12 +68,16 @@ public class ConnectionPool {
     }
     public Connection takeConnection() throws ConnectionPoolException {
         Connection connection = null;
-        try {
-            connection = connectionQueue.take();
-            givenAwayConQueue.add(connection);
-        } catch (InterruptedException e) {
-            throw new ConnectionPoolException(
-                    "Error connecting to the data source.", e);
+        if (!closingConnectionQueue) {
+            try {
+                connection = connectionQueue.take();
+                givenAwayConQueue.add(connection);
+            } catch (InterruptedException e) {
+                throw new ConnectionPoolException(
+                        "Error connecting to the data source.", e);
+            }
+        } else {
+            throw new ConnectionPoolException("Error connecting to the data source.");
         }
         return connection;
     }
@@ -101,8 +111,7 @@ public class ConnectionPool {
             // logger.log(Level.ERROR, "Statement isn't closed.");
         }
     }
-    private void closeConnectionsQueue(BlockingQueue<Connection> queue)
-            throws SQLException {
+    private void closeConnectionsQueue(BlockingQueue<Connection> queue) throws SQLException {
         Connection connection;
         while ((connection = queue.poll()) != null) {
             if (!connection.getAutoCommit()) {
@@ -115,7 +124,7 @@ public class ConnectionPool {
         private Connection connection;
         public PooledConnection(Connection c) throws SQLException {
             this.connection = c;
-            this.connection.setAutoCommit(true);
+            this.connection.setAutoCommit(true); // used to be true
         }
         public void reallyClose() throws SQLException {
             connection.close();

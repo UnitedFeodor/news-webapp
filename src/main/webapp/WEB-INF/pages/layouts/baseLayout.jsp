@@ -1,3 +1,4 @@
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <%@ page language="java" contentType="text/html; charset=utf-8"
 		 pageEncoding="ISO-8859-1"%>

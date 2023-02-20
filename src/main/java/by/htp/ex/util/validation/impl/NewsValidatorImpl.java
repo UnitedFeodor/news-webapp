@@ -15,9 +15,8 @@ public class NewsValidatorImpl implements INewsValidator {
 
     private final int FIELD_COUNT = 7;
 
-    public NewsValidatorImpl(News news) {
+    public NewsValidatorImpl() {
         this.errors = new ArrayList<>(FIELD_COUNT);
-        this.news = new News(news);
     }
 
     @Override

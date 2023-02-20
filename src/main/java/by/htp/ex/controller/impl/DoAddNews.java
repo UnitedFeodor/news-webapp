@@ -23,12 +23,9 @@ public class DoAddNews implements Command {
 
     private final INewsService newsService = ServiceProvider.getInstance().getNewsService();
 
-    private static final String JSP_SAVE_SUCCESS = "save_success";
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-
-        //int id = Integer.parseInt(request.getParameter(NewsConstants.NEWS_ID));
 
         String newNewsDateStr = request.getParameter(NewsConstants.NEWS_DATE);
         try {
@@ -42,11 +39,9 @@ public class DoAddNews implements Command {
             int userId = (int) session.getAttribute(UserConstants.USER_ID);
             newNews.setAuthorId(userId);
 
-            // TODO check all try catches
             newsService.add(newNews);
-            session.setAttribute(JSP_SAVE_SUCCESS, JSPConstants.SUC);
+            session.setAttribute(JSPConstants.JSP_SAVE_SUCCESS, JSPConstants.SUC);
             response.sendRedirect(JSPConstants.CONTROLLER_GO_TO_NEWS_LIST);
-
 
         } catch (DateTimeParseException e) {
             session.setAttribute(JSPConstants.ERROR_MESSAGE, "date parse error");

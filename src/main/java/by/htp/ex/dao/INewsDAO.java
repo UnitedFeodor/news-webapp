@@ -12,5 +12,5 @@ public interface INewsDAO {
 	News fetchById(int id) throws DaoException;
 	int addNews(News news) throws DaoException;
 	void updateNews(News news) throws DaoException;
-	void deleteNews(String[] idNewses)throws DaoException;
+	void deleteNews(int[] newsIds)throws DaoException;
 }

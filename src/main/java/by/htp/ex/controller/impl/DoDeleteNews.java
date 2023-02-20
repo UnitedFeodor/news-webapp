@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-
+import java.util.stream.Stream;
 
 
 public class DoDeleteNews implements Command {
@@ -24,7 +24,8 @@ public class DoDeleteNews implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
 
-        String[] newsIds = request.getParameterValues(NewsConstants.NEWS_ID);
+        String[] newsIdsStringArr = request.getParameterValues(NewsConstants.NEWS_ID);
+        int[] newsIds = Stream.of(newsIdsStringArr).mapToInt(Integer::parseInt).toArray();
         if (newsIds != null) {
             try {
                 newsService.delete(newsIds);
