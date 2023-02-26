@@ -21,10 +21,77 @@
 </title>
 
 <link rel="stylesheet" type="text/css" href="styles/newsStyle.css">
+	<style>
+		.page {
+			background: -webkit-linear-gradient(top,crimson,hotpink );
+			-webkit-text-fill-color: white;
+		}
+		.content,.footer {background: -webkit-linear-gradient(top left,cornflowerblue,lightskyblue )}
+		input {
+			-webkit-text-fill-color: black;
+			background: white;
+		}
+		select {
+			-webkit-text-fill-color: black;
+			background: white;
+		}
+		textarea {
+			-webkit-text-fill-color: black;
+			background: white;
+		}
 
+		.content > a {
+			-webkit-text-fill-color: hotpink;
+			border-bottom-color: hotpink
+		}
+		a {
+			-webkit-text-fill-color: yellow;
+			border-bottom-color: yellow}
+		a:hover {
+			-webkit-text-fill-color: hotpink;
+			background-color: transparent;
+			text-decoration: underline;
+		}
+
+		.menu-wrapper {
+			background: -webkit-linear-gradient(top left,cornflowerblue,lightskyblue  );
+			-webkit-text-fill-color: white;
+		}
+		.menu-title,.list-menu-wrapper {
+			background: -webkit-linear-gradient(top left,crimson,hotpink );
+			-webkit-text-fill-color: white;
+		}
+		.menu-title,.list-menu-wrapper,.menu-wrapper > li {
+			color: yellow;
+		}
+
+		.pagination {
+			margin: 20px;
+			padding-bottom: 10px;
+			align-content: center;
+		}
+		.pagination a {
+			font-size: larger;
+			color: yellow;
+			float: left;
+			padding: 8px 16px;
+			text-decoration: none;
+		}
+
+		.pagination a.active {
+			background-color: deeppink;
+			color: white;
+		}
+		.pagination #selected-page {
+			background-color: hotpink;
+			pointer-events: none;
+		}
+
+
+	</style>
 
 </head>
-<body>
+<body style="background: -webkit-linear-gradient(bottom left, crimson 10px, hotpink, crimson, hotpink 90%)">
 	<div class="page">
 		<div class="header">
 			<%--
@@ -51,8 +118,9 @@
 			<div class="menu">
 
 				<c:if test="${not (sessionScope.userActivity eq 'active')}">
-					<c:out value="${wrapper_welcome}"/>
-
+					<div style="align-content: center; padding: 20px">
+						<c:out value="${wrapper_welcome}"/>
+					</div>
 
 					<%-- <c:import url=""></c:import> --%>
 				</c:if>
@@ -79,6 +147,9 @@
 
 			</div>
 		</div>
+
+
+
 
 		<div class="footer">
 

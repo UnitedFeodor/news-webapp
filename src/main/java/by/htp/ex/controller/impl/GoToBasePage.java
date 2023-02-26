@@ -24,7 +24,7 @@ public class GoToBasePage implements Command{
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<News> latestNews;
 		try {
-			latestNews = newsService.latestList(5);
+			latestNews = newsService.list();
 			if(latestNews.size() > 0) {
 				request.setAttribute(JSPConstants.NEWS, latestNews);
 			}

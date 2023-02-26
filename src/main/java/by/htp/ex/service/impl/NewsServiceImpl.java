@@ -47,6 +47,15 @@ public class NewsServiceImpl implements INewsService{
 	}
 
 	@Override
+	public int getTotalNewsAmount() throws ServiceException {
+		try {
+			return newsDAO.getTotalNewsAmount();
+		} catch (DaoException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
 	public void find()  throws ServiceException{
 		// TODO Auto-generated method stub
 	}
@@ -66,13 +75,16 @@ public class NewsServiceImpl implements INewsService{
 	}
 
 	@Override
-	public List<News> latestList(int count) throws ServiceException {
+	public List<News> getCountNewsStartingFrom(int count, int from) throws ServiceException {
 		if (count <= 0) {
 			throw new ServiceException("invalid number of news requested");
 		}
+		if (from < 0) {
+			throw new ServiceException("invalid page requested");
+		}
 
 		try {
-			return newsDAO.getLatestList(count);
+			return newsDAO.getCountNewsStartingFrom(count, from);
 		} catch (DaoException e) {
 			throw new ServiceException(e);
 		}

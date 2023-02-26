@@ -10,27 +10,73 @@
 </div>
 <div class="add-table-margin">
     <form action="controller" method="post">
-            ${header_logination_login}
-        <input  type="text" name="login"/> <br>
-            ${header_logination_password}
-        <input  type="text" name="password"/> <br>
+        <table class="news_text_format">
+            <tr>
+                <td class="space_around_title_text2">${header_logination_login}</td>
+                
+                <td  class="space_around_view_text2">
+                    <input  type="text" name="login"/> <br>
+                </td>
 
-        <label for="roles">${registration_role}</label>
-        <select name="roles" id="roles">
-            <option value="user">${registration_role_user}</option>
-            <option value="admin">${registration_role_admin}</option>
-        </select>
-        <br><br>
+            </tr>
+            <tr>
+                <td class="space_around_title_text2">
+                    ${header_logination_password}
+                </td>
+                <td  class="space_around_view_text2">
+                    <input  type="text" name="password"/> <br>
+                </td>
+            </tr>
+            <tr>
+                <td class="space_around_title_text2">
+                    <label for="roles">${registration_role}</label>
+                </td>
+                <td class="space_around_view_text2">
+                    <select name="roles" id="roles">
+                        <option value="user">${registration_role_user}</option>
+                        <option value="admin">${registration_role_admin}</option>
+                    </select>
+                </td>
+            </tr>
+            <br><br>
 
-            ${registration_name}
-        <input class="space_around_title_text" type="text" name="name"/> <br>
-            ${registration_surname}
-        <input class="space_around_title_text" type="text" name="surname"/> <br>
-            ${registration_birthday}
-        <input class="space_around_title_text" type="text" name="birthday"/> <br>
+            <tr>
+                <td class="space_around_title_text2">
+                    ${registration_name}
+                </td>
+                <td class="space_around_view_text2">
+                    <input  type="text" name="name"/> <br>
+                </td>
+            </tr>
+            <tr>
+                <td class="space_around_title_text2">
+                 ${registration_surname}
+                </td>
+                <td class="space_around_view_text2">
+                <input  type="text" name="surname"/> <br>
+                </td>
+            </tr>
+            <tr>
+                <td class="space_around_title_text2">
+                    ${registration_birthday}
+                </td>
+                <td class="space_around_view_text2">
+                    <input  type="text" name="birthday"/> <br>
+                </td>
+            </tr>
 
-        <input type="hidden" name="command" value="do_registration" />
-        <input type="submit" value="${save}"/>
+            <tr>
+                <td class="space_around_title_text2">
+
+                </td>
+                <td class="space_around_view_text2" >
+                    <input type="submit" value="${save}" style="margin-left: 70px"/>
+                </td>
+            </tr>
+            <input type="hidden" name="command" value="do_registration" />
+
+        </table>
+
         <!--<a href="controller?command=do_change_language"> en </a> &nbsp;&nbsp; -->
     </form>
 </div>

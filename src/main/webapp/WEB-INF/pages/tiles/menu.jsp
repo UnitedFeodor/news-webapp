@@ -12,23 +12,22 @@
 		<div class="list-menu-wrapper" style="float: right;">
 			<ul style="text-align: left;">
 				<li style="padding-left: 15px;">
-				
-				<a href="controller?command=go_to_news_list">${list_news}</a><br />
+					<a href="controller?command=go_to_news_list">${list_news}</a><br />
 				</li>
 
 				<c:if test="${sessionScope.role eq 'admin'}">
-				   <li style="padding-left: 15px;">
+					<li style="padding-left: 15px;">
 				
 				    <a href="controller?command=go_to_add_news">${list_add}</a>
                 
                    <br />
 					
-				</li></c:if>
+					</li>
+				</c:if>
 			</ul>
 		</div>
 		<div class="clear"></div>
 	</div>
-	<!--  grey free space at the bottom of menu -->
 	<div style="height: 25px;"></div>
 </div>
 

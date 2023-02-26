@@ -49,6 +49,7 @@
         </div>
     </c:if>
 
+
 	<%--
 	 <!-- <logic:notEmpty name="newsForm" property="newsList">
 		<div class="delete-button-position">
@@ -65,3 +66,37 @@
 	</c:if>
 	</div>
 </form>
+
+<form name="amountForm" action="controller" method="get" style="margin: 20px; font-size: larger; min-font-size: 14">
+	<input type="hidden" name="command" value="go_to_news_list" />
+	<input type="hidden" name="page" value="${requestScope.page}">
+	<div class="news-amount">
+		<select name="count" id="count" onchange="javascript:document.amountForm.submit();">
+
+			<option value="5" ${sessionScope.count.equals("5") ? 'selected' : ''}>5</option>
+			<option value="10" ${sessionScope.count.equals("10") ? 'selected' : ''}>10</option>
+			<option value="25" ${sessionScope.count.equals("25") ? 'selected' : ''}>25</option>
+		</select>
+	</div>
+</form>
+<div class="pagination">
+	<c:if test="${not (requestScope.page eq 1) }">
+		<a href="controller?command=go_to_news_list&page=${requestScope.page-1}"> &laquo;</a>
+	</c:if>
+
+	<c:if test="${not (requestScope.page eq 1) }" >
+		<a href="controller?command=go_to_news_list&page=1" > 1 </a>
+	</c:if>
+
+	<a id="selected-page"> ${requestScope.page} </a>
+
+	<c:if test="${not (requestScope.page eq requestScope.final_page_number)}">
+		<a href="controller?command=go_to_news_list&page=${requestScope.final_page_number}"> ${requestScope.final_page_number}</a>
+	</c:if>
+
+
+	<c:if test="${not (requestScope.page eq requestScope.final_page_number) }">
+		<a href="controller?command=go_to_news_list&page=${requestScope.page+1}"> &raquo;</a>
+	</c:if>
+
+</div>

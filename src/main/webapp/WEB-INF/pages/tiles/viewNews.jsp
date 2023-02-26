@@ -39,19 +39,19 @@
 
 
 <c:if test="${sessionScope.role eq 'admin'}">
-<div class="first-view-button">
-	<form action="controller" method="post">
-		<input type="hidden" name="command" value="go_to_edit_news" /> <input
-			type="hidden" name="idNews" value="${news.idNews}" /> <input
-			type="submit" value="${edit}" />
-	</form>
-</div>
+	<div style="margin-left: 30px; margin-bottom: 10px">
+		<form action="controller" method="post">
+			<input type="hidden" name="command" value="go_to_edit_news" />
+			<input type="hidden" name="idNews" value="${news.idNews}" />
+			<input type="submit" value="${edit}" />
+		</form>
+	</div>
 
-<div class="second-view-button">
-	<form action="controller" method="post">
-		<input type="hidden" name="command" value="do_delete_news" /> <input
-			type="hidden" name="idNews" value="${news.idNews}" /> <input
-			type="submit" value="${delete}" />
-	</form>
-</div>
+	<div style="margin-left: 30px" >
+		<form action="controller" method="post">
+			<input type="hidden" name="command" value="do_delete_news" />
+			<input type="hidden" name="idNews" value="${news.idNews}" />
+			<input type="submit" value="${delete}" />
+		</form>
+	</div>
 </c:if>

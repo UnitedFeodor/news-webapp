@@ -4,9 +4,6 @@ import java.sql.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import by.htp.ex.bean.News;
 import by.htp.ex.dao.DaoException;
@@ -16,62 +13,78 @@ import by.htp.ex.dao.connection_pool.ConnectionPoolProvider;
 
 public class NewsDAO implements INewsDAO {
 
-	public static final String DB_ID = "id";
-	public static final String DB_TITLE = "title";
-	public static final String DB_DATE = "date_added";
-	public static final String DB_BRIEF = "brief";
-	public static final String DB_CONTENT = "content";
+	private static final String DB_ID = "id";
+	private static final String DB_TITLE = "title";
+	private static final String DB_DATE = "date_added";
+	private static final String DB_BRIEF = "brief";
+	private static final String DB_CONTENT = "content";
 	
 	
 	private static final String Q_INSERT_NEWS = "INSERT INTO news (title, date_added, brief, content, authors_user_id, news_status_id) VALUES (?,?,?,?,?,?)";
 
 	private static final String Q_DELETE_IDS = "DELETE FROM news WHERE id = ?";
-	private static final String Q_UPDATE_NEWS_BY_ID = "UPDATE news SET title = ?, brief = ?, content = ? WHERE id = ?";
+	private static final String Q_UPDATE_NEWS_BY_ID = "UPDATE news SET title = ?, brief = ?, content = ?,date_added = ? WHERE id = ?";
 	private static final String Q_GET_ALL_NEWS = "SELECT * FROM news";
+	private static final String Q_GET_COUNT_OF_ALL_NEWS = "SELECT COUNT(*) FROM news";
 	private static final String Q_GET_NEWS_BY_ID = "SELECT * FROM news WHERE id = ?";
 	private static final String Q_GET_ALL_NEWS_BY_DATE_DESC = "SELECT * FROM news ORDER BY date_added DESC";
 
-	private ReadWriteLock lock = new ReentrantReadWriteLock();
-	private Lock writeLock = lock.writeLock();
-	private Lock readLock = lock.readLock();
+	private static final String Q_GET_ALL_NEWS_BY_DATE_DESC_LIMIT = "SELECT * FROM news ORDER BY date_added DESC LIMIT ?";
+
+	private static final String Q_GET_COUNT_NEWS_AFTER_DATE_DESC = "SELECT * FROM news WHERE date_added > ? ORDER BY date_added LIMIT ?";
+
+	private static final String Q_GET_COUNT_NEWS_STARTING_FROM_NUMBER = "SELECT * FROM news ORDER BY date_added DESC LIMIT ? OFFSET ?";
 
 	//private Semaphore sem = new Semaphore(1);
 
+
 	@Override
-	public List<News> getLatestList(int count) throws DaoException {
-		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
-				PreparedStatement statement = connection.prepareStatement(Q_GET_ALL_NEWS_BY_DATE_DESC);
+	public int getTotalNewsAmount() throws DaoException {
+		try	(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
+				PreparedStatement statement = connection.prepareStatement(Q_GET_COUNT_OF_ALL_NEWS);
 				ResultSet rs = statement.executeQuery()) {
 
-			readLock.lock();
-
-			List<News> newsList = new ArrayList<>();
-			while (rs.next()) {
-				News currNews = new News();
-				currNews.setIdNews(rs.getInt(DB_ID));
-				currNews.setTitle(rs.getString(DB_TITLE));
-				currNews.setBrief(rs.getString(DB_BRIEF));
-				currNews.setContent(rs.getString(DB_CONTENT));
-				currNews.setNewsDate(rs.getDate(DB_DATE).toLocalDate());
-				newsList.add(currNews);
-
-			}
-			return newsList;
+			rs.next();
+			return rs.getInt(1);
 
 		} catch (SQLException | ConnectionPoolException e) {
 			throw new DaoException(e);
-		} finally {
-			readLock.unlock();
+		}
+	}
+
+	@Override
+	public List<News> getCountNewsStartingFrom(int count, int from) throws DaoException {
+		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
+			 PreparedStatement statement = connection.prepareStatement(Q_GET_COUNT_NEWS_STARTING_FROM_NUMBER)) {
+			int dbOffset = (from-1)*count; //  1*(10-1)
+			statement.setInt(1,count);
+			statement.setInt(2,dbOffset);
+
+			try (ResultSet rs = statement.executeQuery()) {
+				List<News> newsList = new ArrayList<>();
+				while (rs.next()) {
+					News currNews = new News();
+					currNews.setIdNews(rs.getInt(DB_ID));
+					currNews.setTitle(rs.getString(DB_TITLE));
+					currNews.setBrief(rs.getString(DB_BRIEF));
+					currNews.setContent(rs.getString(DB_CONTENT));
+					currNews.setNewsDate(rs.getDate(DB_DATE).toLocalDate());
+					newsList.add(currNews);
+
+				}
+				return newsList;
+			}
+
+		} catch (SQLException | ConnectionPoolException e) {
+			throw new DaoException(e);
 		}
 	}
 
 	@Override
 	public List<News> getList() throws DaoException {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
-			 	PreparedStatement statement = connection.prepareStatement(Q_GET_ALL_NEWS);
+			 	PreparedStatement statement = connection.prepareStatement(Q_GET_ALL_NEWS_BY_DATE_DESC);
 			 	ResultSet rs = statement.executeQuery()) {
-
-			readLock.lock();
 
 			List<News> newsList = new ArrayList<>();
 			while (rs.next()) {
@@ -87,16 +100,12 @@ public class NewsDAO implements INewsDAO {
 
 		} catch (SQLException | ConnectionPoolException e) {
 			throw new DaoException(e);
-		} finally {
-			readLock.unlock();
 		}
 	}
 	@Override
 	public News fetchById(int id) throws DaoException {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			PreparedStatement statement = connection.prepareStatement(Q_GET_NEWS_BY_ID)) {
-
-			readLock.lock();
 
 			statement.setInt(1,id);
 			try (ResultSet rs = statement.executeQuery()) {
@@ -118,8 +127,6 @@ public class NewsDAO implements INewsDAO {
 
 		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} finally {
-			readLock.unlock();
 		}
 	}
 
@@ -128,7 +135,7 @@ public class NewsDAO implements INewsDAO {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			PreparedStatement statement = connection.prepareStatement(Q_INSERT_NEWS)) {
 
-			writeLock.lock();
+			connection.setAutoCommit(false);
 
 			statement.setString(1,news.getTitle());
 			statement.setDate(2,Date.valueOf(news.getNewsDate()));
@@ -139,14 +146,17 @@ public class NewsDAO implements INewsDAO {
 
 			int rowsAffected = statement.executeUpdate();
 			if (rowsAffected != 1) {
+				connection.rollback();
+				connection.setAutoCommit(true);
 				throw new DaoException("error updating news in db");
 			}
+			connection.commit();
+			connection.setAutoCommit(true);
+
 			return 0;
 
 		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} finally {
-			writeLock.unlock();
 		}
 	}
 
@@ -155,23 +165,25 @@ public class NewsDAO implements INewsDAO {
 		try(Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			PreparedStatement statement = connection.prepareStatement(Q_UPDATE_NEWS_BY_ID)) {
 
-			writeLock.lock();
+			connection.setAutoCommit(false);
 
 			statement.setString(1,news.getTitle());
 			statement.setString(2,news.getBrief());
 			statement.setString(3,news.getContent());
-
-			statement.setInt(4,news.getIdNews());
+			statement.setDate(4, Date.valueOf(news.getNewsDate()));
+			statement.setInt(5,news.getIdNews());
 
 			int rowsAffected = statement.executeUpdate();
 			if (rowsAffected != 1) {
+				connection.rollback();
+				connection.setAutoCommit(true);
 				throw new DaoException("error updating news in db");
 			}
+			connection.commit();
+			connection.setAutoCommit(true);
 
 		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} finally {
-			writeLock.unlock();
 		}
 
 	}
@@ -181,7 +193,7 @@ public class NewsDAO implements INewsDAO {
 		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			 PreparedStatement statement = connection.prepareStatement(Q_DELETE_IDS)) {
 
-			writeLock.lock();
+			connection.setAutoCommit(false);
 			//sem.acquire();
 
 			for(int currId : newsIds) {
@@ -192,15 +204,16 @@ public class NewsDAO implements INewsDAO {
 			int[] affectedRecords = statement.executeBatch();
 			for (int affectedRecord : affectedRecords) {
 				if (affectedRecord != 1) {
+					connection.rollback();
+					connection.setAutoCommit(true);
 					throw new DaoException("error deleting news from db");
 				}
 			}
+			connection.commit();
+			connection.setAutoCommit(true);
 
 		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} finally {
-			writeLock.unlock();
-			//sem.release();
 		}
 
 

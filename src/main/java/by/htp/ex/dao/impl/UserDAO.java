@@ -14,16 +14,16 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDAO implements IUserDAO	{
 
-	public static final String DB_ID = "id";
-	public static final String DB_LOGIN = "login";
-	public static final String DB_PASSWORD = "password";
+	private static final String DB_ID = "id";
+	private static final String DB_LOGIN = "login";
+	private static final String DB_PASSWORD = "password";
 
-	public static final String DB_ROLE_ID = "roles_id";
-	public static final String DB_STATUS_ID = "status_id";
+	private static final String DB_ROLE_ID = "roles_id";
+	private static final String DB_STATUS_ID = "status_id";
 
-	public static final String DB_ROLES_TITLE = "title";
+	private static final String DB_ROLES_TITLE = "title";
 
-	public static final int DB_ON_REGISTER_USER_STATUS_ID = 2; // 'active'
+	private static final int DB_ON_REGISTER_USER_STATUS_ID = 2; // 'active'
 
 	private static final String Q_GET_ALL_USERS = "SELECT * FROM users";
 	//private static final String Q_GET_USER_BY_LOGIN_AND_PASSWORD = "SELECT * FROM users WHERE login = ? AND password = ?";
@@ -46,14 +46,11 @@ public class UserDAO implements IUserDAO	{
 	//private Semaphore sem = new Semaphore(1);
 	private ReadWriteLock lock = new ReentrantReadWriteLock();
 	private Lock writeLock = lock.writeLock();
-	private Lock readLock = lock.readLock();
 
 	@Override
 	public boolean signIn(String login, String password) throws DaoException {
 		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			 PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
-
-			readLock.lock();
 
 			getUserStatement.setString(1,login);
 
@@ -66,14 +63,12 @@ public class UserDAO implements IUserDAO	{
 				return BCrypt.checkpw(password,hashedPassword);
 
 			} catch (IllegalArgumentException e) {
-				return false;
+				throw new DaoException(e);
 			}
 
 
-		} catch (SQLException | ConnectionPoolException e) {
+		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} finally {
-			readLock.unlock();
 		}
 
 	}
@@ -84,8 +79,6 @@ public class UserDAO implements IUserDAO	{
 	public String getRole(String login, String password) throws DaoException {
 		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			 PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
-
-			readLock.lock();
 
 			getUserStatement.setString(1,login);
 			try(ResultSet rs = getUserStatement.executeQuery()) {
@@ -105,8 +98,6 @@ public class UserDAO implements IUserDAO	{
 			}
 		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} finally {
-			readLock.unlock();
 		}
 	}
 
@@ -115,7 +106,6 @@ public class UserDAO implements IUserDAO	{
 		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			 PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_AND_ROLE_BY_LOGIN)) {
 
-			readLock.lock();
 			getUserStatement.setString(1,login);
 			try(ResultSet rs = getUserStatement.executeQuery()) {
 				User foundUser;
@@ -135,8 +125,6 @@ public class UserDAO implements IUserDAO	{
 
 		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} finally {
-			readLock.unlock();
 		}
 	}
 
@@ -144,8 +132,6 @@ public class UserDAO implements IUserDAO	{
 	public int getIdByLogin(String login) throws DaoException {
 		try (Connection connection = ConnectionPoolProvider.getInstance().takeConnection();
 			 PreparedStatement getUserStatement = connection.prepareStatement(Q_GET_USER_BY_LOGIN)) {
-
-			readLock.lock();
 
 			getUserStatement.setString(1,login);
 			try(ResultSet rs = getUserStatement.executeQuery()) {
@@ -161,8 +147,6 @@ public class UserDAO implements IUserDAO	{
 
 		} catch (SQLException | ConnectionPoolException | DaoException e) {
 			throw new DaoException(e);
-		} finally {
-			readLock.unlock();
 		}
 	}
 

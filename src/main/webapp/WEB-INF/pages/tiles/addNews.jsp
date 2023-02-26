@@ -44,14 +44,15 @@
 
 
         <%-- <c:if test="${sessionScope.role eq 'admin'}"> --%>
-        <div class="first-view-button">
+        <div style="margin-left: 120px; margin-bottom: 10px">
             <!-- form -->
             <input type="hidden" name="command" value="do_add_news" /> <input
                <%-- type="hidden" name="idNews" value="${news.idNews}" /> --%> <input
                 type="submit" value="${save}" />
         </div>
     </form>
-    <div class="second-view-button">
+
+    <div style="margin-left: 120px" >
         <form action="controller">
             <input type="hidden" name="command" value="go_to_news_list" /> <input
              <%--   type="hidden" name="idNews" value="${news.idNews}" /> --%><input
