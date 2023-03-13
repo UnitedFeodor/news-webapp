@@ -178,9 +178,11 @@ html,body {
 } */
 
 .news-content {
-	background: cornflowerblue;
+	background: -webkit-linear-gradient(top left,cornflowerblue,lightskyblue );
 	word-break: break-all;
 	text-align: left;
+	font-family: "Arial Narrow", serif;
+	max-font-size: 10;
 	padding-bottom: 5px;
 	padding-top: 5px;
 	padding-right: 25%;

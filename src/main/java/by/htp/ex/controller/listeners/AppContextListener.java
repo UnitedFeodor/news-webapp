@@ -12,7 +12,6 @@ public class AppContextListener implements ServletContextListener {
         try {
             ConnectionPoolProvider.getInstance().initPoolData();
         } catch (ConnectionPoolException e) {
-            e.printStackTrace();
             throw new RuntimeException("error initialising the connection pool",e);
         }
         ServletContextListener.super.contextInitialized(sce);
@@ -20,7 +19,11 @@ public class AppContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        ConnectionPoolProvider.getInstance().dispose();
+        try {
+            ConnectionPoolProvider.getInstance().dispose();
+        } catch (ConnectionPoolException e) {
+            throw new RuntimeException("error disposing of the connection pool",e);
+        }
         ServletContextListener.super.contextDestroyed(sce);
 
     }

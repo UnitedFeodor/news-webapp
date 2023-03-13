@@ -20,8 +20,12 @@
 
 </title>
 
-<link rel="stylesheet" type="text/css" href="styles/newsStyle.css">
+<link rel="stylesheet" type="text/css" href="styles/newsStyleBroken.css">
 	<style>
+		.header {
+			background: -webkit-linear-gradient(top left,cornflowerblue,lightskyblue )
+		}
+
 		.page {
 			background: -webkit-linear-gradient(top,crimson,hotpink );
 			-webkit-text-fill-color: white;
@@ -85,6 +89,19 @@
 		.pagination #selected-page {
 			background-color: hotpink;
 			pointer-events: none;
+		}
+
+		.news-title {
+			background: -webkit-linear-gradient(top left,crimson,hotpink );
+			-webkit-text-fill-color: white;
+			font-size: xx-large;
+		}
+		.news-content {
+			background: -webkit-linear-gradient(top right,crimson,hotpink );
+			-webkit-text-fill-color: white;
+		}
+		.news-padding {
+			padding-left: 10x;
 		}
 
 

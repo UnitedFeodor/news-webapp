@@ -51,19 +51,17 @@ public class ConnectionPool {
                     "Can't find database driver class", e);
         }
     }
-    public void dispose() {
+    public void dispose() throws ConnectionPoolException {
         closingConnectionQueue = true;
         clearConnectionQueue();
     }
-    private void clearConnectionQueue() {
-        try { // TODO local queue to isolate disposing connections with
-            /*BlockingQueue<Connection> localQueue = new ArrayBlockingQueue<>(poolSize);
-            localQueue.addAll(givenAwayConQueue);
-            localQueue.addAll(connectionQueue);*/
+    private void clearConnectionQueue() throws ConnectionPoolException {
+        try {
             closeConnectionsQueue(givenAwayConQueue);
             closeConnectionsQueue(connectionQueue);
         } catch (SQLException e) {
             // logger.log(Level.ERROR, "Error closing the connection.", e);
+            throw new ConnectionPoolException("Error closing the connection.", e);
         }
     }
     public Connection takeConnection() throws ConnectionPoolException {
@@ -82,33 +80,38 @@ public class ConnectionPool {
         return connection;
     }
 
-    public void closeConnection(Connection con, Statement st, ResultSet rs) {
+    public void closeConnection(Connection con, Statement st, ResultSet rs) throws ConnectionPoolException {
         try {
             con.close();
         } catch (SQLException e) {
             // logger.log(Level.ERROR, "Connection isn't return to the pool.");
+            throw new ConnectionPoolException(e);
         }
         try {
             rs.close();
         } catch (SQLException e) {
             // logger.log(Level.ERROR, "ResultSet isn't closed.");
+            throw new ConnectionPoolException(e);
         }
         try {
             st.close();
         } catch (SQLException e) {
             // logger.log(Level.ERROR, "Statement isn't closed.");
+            throw new ConnectionPoolException(e);
         }
     }
-    public void closeConnection(Connection con, Statement st) {
+    public void closeConnection(Connection con, Statement st) throws ConnectionPoolException {
         try {
             con.close();
         } catch (SQLException e) {
             // logger.log(Level.ERROR, "Connection isn't return to the pool.");
+            throw new ConnectionPoolException(e);
         }
         try {
             st.close();
         } catch (SQLException e) {
             // logger.log(Level.ERROR, "Statement isn't closed.");
+            throw new ConnectionPoolException(e);
         }
     }
     private void closeConnectionsQueue(BlockingQueue<Connection> queue) throws SQLException {
